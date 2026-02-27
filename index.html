@@ -2542,18 +2542,18 @@ console.log('✅ [appModal] API初期化完了');
 <div style="background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:48px 40px;max-width:380px;width:90%;text-align:center;">
   <div style="font-size:3rem;margin-bottom:12px;">⚽</div>
   <h1 style="color:#f8fafc;font-size:1.3rem;font-weight:700;margin:0 0 4px;">eS-League DB Pro</h1>
-  <p style="color:#94a3b8;font-size:0.8rem;margin:0 0 32px;">SYSTEM v52.181 Phase 4.24</p>
+  <p style="color:#94a3b8;font-size:0.8rem;margin:0 0 32px;">SYSTEM v52.181 Phase 4.25</p>
   <div style="position:relative;margin-bottom:16px;">
     <input id="auth-input" type="password" placeholder="パスワードを入力"
       style="width:100%;box-sizing:border-box;padding:14px 48px 14px 16px;background:rgba(255,255,255,0.08);
              border:2px solid rgba(255,255,255,0.15);border-radius:12px;color:#f8fafc;font-size:1rem;outline:none;"
-      onkeydown="if(event.key==='Enter')authCheck()"
+      onkeydown="if(event.key==='Enter')window.authCheck()"
     />
     <button onclick="const i=document.getElementById('auth-input');i.type=i.type==='password'?'text':'password'"
       style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;">👁</button>
   </div>
   <div id="auth-error" style="color:#f87171;font-size:0.78rem;min-height:20px;margin-bottom:12px;"></div>
-  <button onclick="authCheck()"
+  <button onclick="window.authCheck()"
     style="width:100%;padding:14px;background:linear-gradient(135deg,#10b981,#059669);border:none;border-radius:12px;
            color:white;font-weight:700;font-size:1rem;cursor:pointer;">
     🔓 ログイン
@@ -2563,24 +2563,23 @@ console.log('✅ [appModal] API初期化完了');
 </div>
 <script>
 (function(){
-  const HASH =  + pw_hash + r;
-  const KEY = 'es_league_auth';
-  const EXPIRE = 24 * 60 * 60 * 1000;
+  var HASH = 'e8b2c1cd9baaf329aaa84c891a3d77aedc2b5c8fa4dd26ad47fcf7d7ef55bc54';
+  var KEY  = 'es_league_auth';
+  var EXP  = 24 * 60 * 60 * 1000;
   async function sha256(s){
-    const b = new TextEncoder().encode(s);
-    const h = await crypto.subtle.digest('SHA-256',b);
+    var b = new TextEncoder().encode(s);
+    var h = await crypto.subtle.digest('SHA-256', b);
     return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('');
   }
-  function dismiss(){document.getElementById('auth-overlay').style.display='none';}
-  // セッション確認
+  function dismiss(){ document.getElementById('auth-overlay').style.display='none'; }
   try{
-    const d = JSON.parse(localStorage.getItem(KEY)||'null');
-    if(d && d.hash===HASH && Date.now()-d.ts < EXPIRE){ dismiss(); return; }
+    var d = JSON.parse(localStorage.getItem(KEY)||'null');
+    if(d && d.hash===HASH && Date.now()-d.ts < EXP){ dismiss(); return; }
   }catch(e){}
   window.authCheck = async function(){
-    const v = document.getElementById('auth-input').value;
+    var v = document.getElementById('auth-input').value;
     if(!v){ document.getElementById('auth-error').textContent='パスワードを入力してください'; return; }
-    const h = await sha256(v);
+    var h = await sha256(v);
     if(h===HASH){
       localStorage.setItem(KEY, JSON.stringify({hash:HASH, ts:Date.now()}));
       dismiss();
