@@ -2532,64 +2532,96 @@ console.log('✅ [appModal] API初期化完了');
 </head>
 <body>
 <!-- ============================================================ -->
-<!-- パスワード認証オーバーレイ (v52.181) -->
+<!-- eS-League DB Pro パスワード認証 (generate_auth.py) -->
 <!-- ============================================================ -->
-<div id="auth-overlay" style="
-  position:fixed;inset:0;background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
-  display:flex;align-items:center;justify-content:center;z-index:99999;
-  font-family:'Inter',system-ui,sans-serif;
-">
-<div style="background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:48px 40px;max-width:380px;width:90%;text-align:center;">
-  <div style="font-size:3rem;margin-bottom:12px;">⚽</div>
-  <h1 style="color:#f8fafc;font-size:1.3rem;font-weight:700;margin:0 0 4px;">eS-League DB Pro</h1>
-  <p style="color:#94a3b8;font-size:0.8rem;margin:0 0 32px;">SYSTEM v52.181 Phase 4.25</p>
-  <div style="position:relative;margin-bottom:16px;">
-    <input id="auth-input" type="password" placeholder="パスワードを入力"
-      style="width:100%;box-sizing:border-box;padding:14px 48px 14px 16px;background:rgba(255,255,255,0.08);
-             border:2px solid rgba(255,255,255,0.15);border-radius:12px;color:#f8fafc;font-size:1rem;outline:none;"
-      onkeydown="if(event.key==='Enter')window.authCheck()"
-    />
-    <button onclick="const i=document.getElementById('auth-input');i.type=i.type==='password'?'text':'password'"
-      style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;">👁</button>
+<div id="auth-overlay" style="position:fixed;inset:0;background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);display:flex;align-items:center;justify-content:center;z-index:99999;font-family:'Inter',system-ui,sans-serif;">
+  <div style="background:rgba(255,255,255,0.06);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.12);border-radius:24px;padding:52px 44px;max-width:390px;width:90%;text-align:center;box-shadow:0 32px 64px rgba(0,0,0,0.5);">
+    <div style="font-size:3.2rem;margin-bottom:14px;">⚽</div>
+    <h1 style="color:#f8fafc;font-size:1.35rem;font-weight:800;margin:0 0 6px;letter-spacing:-0.02em;">eS-League DB Pro</h1>
+    <p style="color:#64748b;font-size:0.78rem;margin:0 0 36px;letter-spacing:0.08em;text-transform:uppercase;">Authenticated Access</p>
+    <div style="position:relative;margin-bottom:12px;">
+      <input id="es-auth-input" type="password" placeholder="パスワードを入力"
+        autocomplete="current-password"
+        style="width:100%;box-sizing:border-box;padding:15px 50px 15px 18px;background:rgba(255,255,255,0.09);border:2px solid rgba(255,255,255,0.18);border-radius:14px;color:#f1f5f9;font-size:1.05rem;outline:none;transition:border 0.2s;"
+        onfocus="this.style.borderColor='rgba(16,185,129,0.7)'"
+        onblur="this.style.borderColor='rgba(255,255,255,0.18)'"
+        onkeydown="if(event.key==='Enter'){esAuthCheck();}"
+      />
+      <button
+        onclick="(function(){const i=document.getElementById('es-auth-input');i.type=(i.type==='password'?'text':'password');})();"
+        style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:none;border:none;color:#64748b;cursor:pointer;font-size:1.15rem;padding:0;line-height:1;">👁</button>
+    </div>
+    <div id="es-auth-msg" style="min-height:22px;margin-bottom:14px;font-size:0.8rem;"></div>
+    <button onclick="esAuthCheck()"
+      style="width:100%;padding:15px;background:linear-gradient(135deg,#10b981,#059669);border:none;border-radius:14px;color:white;font-weight:700;font-size:1.05rem;cursor:pointer;letter-spacing:0.02em;transition:opacity 0.2s;"
+      onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+      🔓 ログイン
+    </button>
+    <p style="color:#334155;font-size:0.68rem;margin-top:22px;">セッションは24時間保持されます</p>
   </div>
-  <div id="auth-error" style="color:#f87171;font-size:0.78rem;min-height:20px;margin-bottom:12px;"></div>
-  <button onclick="window.authCheck()"
-    style="width:100%;padding:14px;background:linear-gradient(135deg,#10b981,#059669);border:none;border-radius:12px;
-           color:white;font-weight:700;font-size:1rem;cursor:pointer;">
-    🔓 ログイン
-  </button>
-  <p style="color:#475569;font-size:0.7rem;margin-top:20px;">24時間セッション保持</p>
-</div>
 </div>
 <script>
-(function(){
-  var HASH = 'e8b2c1cd9baaf329aaa84c891a3d77aedc2b5c8fa4dd26ad47fcf7d7ef55bc54';
-  var KEY  = 'es_league_auth';
-  var EXP  = 24 * 60 * 60 * 1000;
-  async function sha256(s){
-    var b = new TextEncoder().encode(s);
-    var h = await crypto.subtle.digest('SHA-256', b);
-    return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('');
+/* eS-League Auth — generated by generate_auth.py */
+(function() {
+  var _H = 'e8b2c1cd9baaf329aaa84c891a3d77aedc2b5c8fa4dd26ad47fcf7d7ef55bc54';
+  var _K = 'esLeagueAuth_v1';
+  var _E = 86400000; /* 24h ms */
+
+  function _sha256(str) {
+    var buf = new TextEncoder().encode(str);
+    return crypto.subtle.digest('SHA-256', buf).then(function(ab) {
+      return Array.from(new Uint8Array(ab))
+        .map(function(b) { return b.toString(16).padStart(2,'0'); })
+        .join('');
+    });
   }
-  function dismiss(){ document.getElementById('auth-overlay').style.display='none'; }
-  try{
-    var d = JSON.parse(localStorage.getItem(KEY)||'null');
-    if(d && d.hash===HASH && Date.now()-d.ts < EXP){ dismiss(); return; }
-  }catch(e){}
-  window.authCheck = async function(){
-    var v = document.getElementById('auth-input').value;
-    if(!v){ document.getElementById('auth-error').textContent='パスワードを入力してください'; return; }
-    var h = await sha256(v);
-    if(h===HASH){
-      localStorage.setItem(KEY, JSON.stringify({hash:HASH, ts:Date.now()}));
-      dismiss();
-    } else {
-      document.getElementById('auth-error').textContent='パスワードが正しくありません';
-      document.getElementById('auth-input').value='';
-      document.getElementById('auth-input').focus();
+
+  function _dismiss() {
+    var el = document.getElementById('auth-overlay');
+    if (el) el.style.display = 'none';
+  }
+
+  function _setMsg(txt, color) {
+    var el = document.getElementById('es-auth-msg');
+    if (el) { el.textContent = txt; el.style.color = color || '#f87171'; }
+  }
+
+  /* セッション確認 */
+  try {
+    var saved = JSON.parse(localStorage.getItem(_K) || 'null');
+    if (saved && saved.h === _H && (Date.now() - saved.t) < _E) {
+      _dismiss(); return;
     }
+  } catch(e) {}
+
+  /* グローバル公開 */
+  window.esAuthCheck = function() {
+    var pw = document.getElementById('es-auth-input');
+    if (!pw || !pw.value.trim()) {
+      _setMsg('パスワードを入力してください', '#fbbf24');
+      return;
+    }
+    _setMsg('確認中...', '#94a3b8');
+    _sha256(pw.value).then(function(h) {
+      if (h === _H) {
+        localStorage.setItem(_K, JSON.stringify({h: _H, t: Date.now()}));
+        _dismiss();
+      } else {
+        _setMsg('パスワードが正しくありません ✗', '#f87171');
+        pw.value = '';
+        pw.focus();
+      }
+    });
   };
-  setTimeout(()=>document.getElementById('auth-input').focus(), 100);
+
+  /* 後方互換: window.authCheck も同じ関数に */
+  window.authCheck = window.esAuthCheck;
+
+  /* フォーカス */
+  setTimeout(function() {
+    var el = document.getElementById('es-auth-input');
+    if (el) el.focus();
+  }, 150);
 })();
 </script>
 
