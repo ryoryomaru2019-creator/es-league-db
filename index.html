@@ -4067,7 +4067,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="flex items-center gap-3 mt-2">
                 <span class="text-gray-400 uppercase tracking-widest text-[10px]">INTEGRATED MANAGEMENT CONSOLE</span>
-                <span class="bg-emerald-600 text-white px-3 py-0.5 rounded-full text-[10px] tracking-widest uppercase">SYSTEM v52.179 Phase 4.23</span>
+                <span class="bg-emerald-600 text-white px-3 py-0.5 rounded-full text-[10px] tracking-widest uppercase">SYSTEM v52.179 Phase 4.23</span><span class="text-[9px] text-gray-300/40 tracking-wide ml-1 select-none">Produced by <a href="https://x.com/ryoryomaru99" target="_blank" rel="noopener" class="text-gray-300/40 hover:text-gray-400/60 transition-colors no-underline">@ryoryomaru99</a></span>
                 <span id="syncStatus" class="text-[10px] text-gray-400 uppercase tracking-widest flex items-center gap-1"></span>
             </div>
         </div>
@@ -4265,7 +4265,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <span class="search-kbd">⌘K</span>
                                     <button class="search-clear" id="searchClearBtn" onclick="window.clearSearch()" title="クリア">×</button>
                                 </div>
-                                <div class="search-hint" id="searchHint">
+                                <div class="search-hint hidden" id="searchHint">
                                     ヒント: <code>#23</code> 背番号 ／ <code>!ラベル名</code> ラベル ／ <code>@チーム名</code> チーム
                                 </div>
                             </div>
@@ -4422,7 +4422,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <!-- Results Area -->
             <div class="lg:col-span-8 bg-white rounded-[2rem] border-2 border-slate-100 p-10 min-h-[600px] flex flex-col">
-                <div id="resultHeaderArea" class="hidden flex justify-between items-center mb-6 fade-in">
+                <div id="resultHeaderArea" class="flex justify-between items-center mb-6 fade-in">
                     <div>
                         <h4 class="text-2xl uppercase">解析キュー & 結果</h4>
                         <div class="flex items-center gap-3 mt-2">
@@ -4434,7 +4434,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         </div>
                     </div>
-                    <button id="batchApplyBtn" onclick="window.smartStartSaveProcess()" class="bg-emerald-600 text-white px-10 py-4 rounded-2xl shadow-xl uppercase hover:bg-emerald-700 transition">✅ DB に反映</button>
+                    <button id="batchApplyBtn" onclick="window.smartStartSaveProcess()" class="bg-slate-300 text-slate-500 px-10 py-4 rounded-2xl shadow-xl uppercase transition cursor-not-allowed" disabled title="AIで解析後にアクティブになります">📋 DB に反映（解析後にアクティブ）</button>
                 <button onclick="window.openBulkImportModal()" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl shadow-xl uppercase hover:from-indigo-700 hover:to-purple-700 transition flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                     📥 選手データ一括インポート
@@ -4924,6 +4924,13 @@ window.renderSharedComponents = function() {
     renderApiKeyWidget('apiKeyContainerAdmin', 'geminiApiKey_admin');
     renderApiKeyWidget('apiKeyContainerCard', 'geminiApiKey_card');
     renderApiKeyWidget('apiKeyContainerDb', 'geminiApiKey_db');
+    // v52.179b: localStorage から APIキーを復元してinputに反映
+    const _savedKey = localStorage.getItem('geminiApiKey') || '';
+    if (_savedKey) {
+        const _inputs = ['geminiApiKey_admin','geminiApiKey_card','geminiApiKey_db'];
+        _inputs.forEach(id => { const el = document.getElementById(id); if(el) el.value = _savedKey; });
+        window.geminiApiKey = _savedKey;
+    }
 }
 
 window.changeCardMergeSortMode = function(mode) {
@@ -5129,7 +5136,7 @@ function updateView() {
             const isActiveFilter = playerViewSelectedTeams.includes(t.id);
             const rowBg = isActiveFilter ? 'bg-yellow-50 ring-2 ring-yellow-400' : 'hover:bg-slate-50';
             const nameCls = isActiveFilter ? 'font-bold text-yellow-800' : '';
-            return `<tr class="${rowBg} cursor-pointer transition-all" onclick="window.viewTeamPlayers('${t.id}')"><td>${l2Text}${leagueLabelMap[t.l1] || t.l1}</td><td class="${nameCls}">${t.name}${isActiveFilter ? ' <span class=\"text-[10px] bg-yellow-300 text-yellow-900 px-1 rounded\">絞込中</span>' : ''}</td><td class="text-center"><span class="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full text-xs font-bold">${memberCount}人</span></td><td class="text-right font-mono">${t.id}</td><td class="text-center"><button onclick="window.viewTeamPlayers('${t.id}')" class="bg-slate-900 text-white px-4 py-2 rounded-xl text-[9px] uppercase">詳細</button></td></tr>`;
+            return `<tr class="${rowBg} cursor-pointer transition-all" onclick="window.viewTeamPlayers('${t.id}')"><td>${l2Text}${leagueLabelMap[t.l1] || t.l1}</td><td class="${nameCls}">${t.name}${isActiveFilter ? ' <span class=\"text-[10px] bg-yellow-300 text-yellow-900 px-1 rounded\">絞込中</span>' : ''}</td><td class="text-center"><span class="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full text-xs font-bold">${memberCount}人</span></td><td class="text-right font-mono">${t.id}</td><td class="text-center"><div class="flex gap-1 justify-center items-center"><button onclick="window.viewTeamPlayers('${t.id}')" class="bg-slate-900 hover:bg-slate-700 text-white px-3 py-1.5 rounded-xl text-[9px] uppercase transition-colors">詳細</button><button onclick="event.stopPropagation();window.openTournamentRanking('${t.l1}')" class="bg-amber-500 hover:bg-amber-600 text-white px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition-colors" title="🏆 大会ランキング">🏆</button></div></td></tr>`;
         }).join('') + (() => {
             // FIX-6: FA = teamId empty or FA label
             const faCount = playerMaster.filter(p => isFA(p)).length;
@@ -5507,7 +5514,7 @@ if (isBatchProcessing || processedCount > 0) { progressBar.classList.remove('hid
     const playerCountDisplay = item.players && item.players.length > 0 ? `<div class="text-sm text-indigo-600 font-semibold mt-2">登録選手: ${item.players.length}人</div>` : '';
     const logsHtml = item.logs.length > 0 ? item.logs.map(log => `<div class="${log.colorClass} py-2 px-4 border-l-4 rounded text-xs leading-relaxed mb-2"><span class="text-gray-500">${log.time}</span> ${log.icon} ${log.message}</div>`).join('') : '<div class="text-center text-gray-400 text-xs py-4">ログはまだありません</div>';
     return `<div class="queue-card bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-xl mb-3"><div class="p-5 cursor-pointer hover:bg-gray-50 transition-colors" onclick="window.toggleQueueCardDetail(${i})"><div class="flex justify-between items-center"><div class="flex items-center gap-3"><span id="queueDetailIcon${i}" class="text-gray-400 text-lg transition-transform duration-300" style="display: inline-block;">▶</span><h3 class="text-lg font-bold text-gray-800">${item.name}</h3></div>${statusBadge}</div>${playerCountDisplay}${retryBtnHtml}</div><div id="queueDetail${i}" class="hidden border-t border-gray-200 bg-gray-50"><div class="p-5"><h4 class="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2"><span class="text-indigo-600">📋</span> 処理ログ</h4><div class="space-y-1 max-h-80 overflow-y-auto custom-scrollbar">${logsHtml}</div></div></div></div>`;
-  }).join(''); } const isFinished = !isBatchProcessing && autoAnalysisQueue.some(x => x.status === 'done'); const saveBtn = document.getElementById('batchApplyBtn'); if (saveBtn) { saveBtn.disabled = !isFinished && batchPendingResults.latest.length === 0; } updateTotalParsedCount(); }
+  }).join(''); } const isFinished = !isBatchProcessing && autoAnalysisQueue.some(x => x.status === 'done'); const saveBtn = document.getElementById('batchApplyBtn'); if (saveBtn) {   if (isFinished || batchPendingResults.latest.length > 0) {     saveBtn.disabled = false;     saveBtn.className = 'bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-4 rounded-2xl shadow-xl uppercase transition cursor-pointer animate-pulse';     saveBtn.title = '解析完了！クリックしてDBに反映してください';     saveBtn.innerHTML = '✅ DB に反映';   } else {     saveBtn.disabled = true;     saveBtn.className = 'bg-slate-300 text-slate-500 px-10 py-4 rounded-2xl shadow-xl uppercase transition cursor-not-allowed';     saveBtn.title = 'AIで解析後にアクティブになります';     saveBtn.innerHTML = '📋 DB に反映（解析後にアクティブ）';   } } updateTotalParsedCount(); }
 
 // Phase 4.11.55: カード展開/折りたたみ機能
 window.toggleQueueCardDetail = function(index) {
@@ -5581,7 +5588,7 @@ async function startManualAnalysis() {
             manualPendingResults = parseGeminiJSON(text); // Fix v50.60
             targetAutoTeamId = tid; batchPendingResults = manualPendingResults; 
             document.getElementById('resultHeaderArea').classList.remove('hidden'); updateTotalParsedCount(); 
-            const saveBtn = document.getElementById('batchApplyBtn'); if(saveBtn) { saveBtn.disabled = false; saveBtn.innerHTML = `✅ 保存 & 反映`; } addAnalysisLog("画像解析完了", "done"); 
+            const saveBtn = document.getElementById('batchApplyBtn'); if(saveBtn) { saveBtn.disabled = false; saveBtn.className = 'bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-4 rounded-2xl shadow-xl uppercase transition cursor-pointer animate-pulse'; saveBtn.title = '解析完了！クリックしてDBに反映してください'; saveBtn.innerHTML = `✅ DB に反映`; } addAnalysisLog("画像解析完了", "done"); 
         } 
     } catch (e) { showMessage("解析エラー: " + e.message, "error"); addAnalysisLog("解析失敗", "error"); updateProgress('adminManual', 0, "エラーが発生しました"); } finally { btn.disabled = false; btn.classList.remove('btn-analyzing'); btn.innerHTML = '🚀 解析を開始'; setTimeout(() => hideProgress('adminManual'), 2000); } 
 }
@@ -6927,6 +6934,26 @@ window.clearSearch = function() {
     if (inp) { inp.value = ''; inp.focus(); }
     window.onSearchInput('');
 };
+// ── 検索ヒント表示制御 (v52.179b) ─────────────────────────────
+(function() {
+  function setupSearchHint() {
+    const inp = document.getElementById('playerSearch');
+    const hint = document.getElementById('searchHint');
+    if (!inp || !hint) return;
+    inp.addEventListener('focus', () => hint.classList.remove('hidden'));
+    inp.addEventListener('blur',  () => setTimeout(() => hint.classList.add('hidden'), 200));
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault(); inp.focus(); inp.select();
+      }
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupSearchHint);
+  } else { setupSearchHint(); }
+})();
+// ─────────────────────────────────────────────────────────────
+
 
 window.onSearchKeydown = function(e) {
     if (e.key === 'Escape') window.clearSearch();
@@ -7263,7 +7290,73 @@ Object.assign(window, {
         renderAutoQueueCards();
     },
     closeMergeModal: () => { document.getElementById('mergeConfirmModal').classList.replace('flex', 'hidden'); currentConflicts = []; },
-    checkApiKey: async () => { if(window.getApiKey() !== "") { showMessage("API TEST OK & SAVED", "success"); saveToCloud(); } else showMessage("API KEY IS EMPTY", "error"); },
+    checkApiKey: async () => {
+        const inputKey = document.getElementById('geminiApiKey_admin')?.value
+                      || document.getElementById('geminiApiKey_card')?.value
+                      || document.getElementById('geminiApiKey_db')?.value
+                      || '';
+        if (!inputKey) { showMessage('❌ APIキーを入力してください', 'error'); return; }
+
+        // ボタンにローディング表示
+        const btns = document.querySelectorAll('button[onclick*="checkApiKey"]');
+        btns.forEach(b => { b.disabled = true; b.textContent = '⏳ 検証中...'; });
+        showMessage('🔍 APIキーを検証中...', 'info');
+
+        try {
+            // 実際にGemini APIへ最小リクエストを送って検証
+            const testPayload = {
+                contents: [{ parts: [{ text: 'Hi' }] }],
+                generationConfig: { maxOutputTokens: 5 }
+            };
+            const res = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${inputKey}`,
+                { method: 'POST', body: JSON.stringify(testPayload), headers: { 'Content-Type': 'application/json' } }
+            );
+            const json = await res.json();
+
+            if (res.ok && json.candidates) {
+                // ✅ 有効なキー → localStorage & poolに保存
+                localStorage.setItem('geminiApiKey', inputKey);
+                window.geminiApiKey = inputKey;
+                window.syncApiKey(inputKey);
+
+                // プールにも追加（重複チェック）
+                if (window._apiKeyPool) {
+                    const exists = window._apiKeyPool.keys.find(k => k.key === inputKey);
+                    if (!exists) {
+                        const label = 'Key #' + (window._apiKeyPool.keys.length + 1);
+                        window._apiKeyPool.keys.push({ key: inputKey, label, active: true });
+                    } else {
+                        exists.active = true;
+                    }
+                    window._apiKeyPool.save();
+                    if (window.renderApiKeyPool) window.renderApiKeyPool();
+                }
+                showMessage('✅ APIキー認証OK！localStorageに保存しました', 'success');
+                // ボタン色を一時的に緑に
+                btns.forEach(b => { b.style.background='#059669'; b.textContent='✅ 認証OK & 保存済み'; });
+                setTimeout(() => btns.forEach(b => { b.disabled=false; b.style.background=''; b.textContent='🔑 Test API & Save'; }), 3000);
+            } else {
+                // ❌ 無効なキー
+                const errMsg = json.error?.message || '不明なエラー';
+                const status = res.status;
+                if (status === 400 || status === 401 || status === 403) {
+                    showMessage(`❌ APIキーが無効です (${status})`, 'error');
+                } else if (status === 429) {
+                    showMessage('⚠️ レート制限中ですが、キーは有効です。保存します。', 'warning');
+                    localStorage.setItem('geminiApiKey', inputKey);
+                    window.geminiApiKey = inputKey;
+                    window.syncApiKey(inputKey);
+                } else {
+                    showMessage(`❌ API エラー: ${errMsg}`, 'error');
+                }
+                btns.forEach(b => { b.disabled=false; b.style.background=''; b.textContent='🔑 Test API & Save'; });
+            }
+        } catch(e) {
+            showMessage('❌ ネットワークエラー: ' + e.message, 'error');
+            btns.forEach(b => { b.disabled=false; b.style.background=''; b.textContent='🔑 Test API & Save'; });
+        }
+    },
     openHelpModal: () => document.getElementById('apiKeyHelpModal')?.classList.remove('hidden'),
     closeHelpModal: () => document.getElementById('apiKeyHelpModal')?.classList.add('hidden'),
     openLabelManager: () => document.getElementById('labelManagerModal')?.classList.remove('hidden'), 
