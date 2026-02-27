@@ -2,7 +2,7 @@
 <!-- 
   ========================================
   eS League DB Pro 2026
-  Version: v52.177 Phase 4.22 Sprint3-FIXED
+  Version: v52.179 Phase 4.22 Sprint3-FIXED + BugFix
   Date: 2026-02-23
   Features:
     - 選手データ一括インポート（CSV/JSON対応）
@@ -18,7 +18,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eS League DB Pro 2026 v52.175 Phase 4.20 FEATURE BUILD</title>
+    <title>eS League DB Pro 2026 v52.177 Phase 4.22 Sprint3-FIXED</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -960,15 +960,27 @@
             100% { transform: rotate(360deg); }
         }
     
-/* FIX-C: Selected player row highlight */
+/* FIX-C: Selected player row highlight (v52.178 dark-mode強化) */
 .player-row-selected {
-    background: linear-gradient(90deg, rgba(99,102,241,0.08) 0%, rgba(16,185,129,0.06) 100%) !important;
-    box-shadow: 0 0 0 2px rgba(99,102,241,0.35) inset, 0 2px 8px rgba(99,102,241,0.12);
+    background: linear-gradient(90deg, rgba(99,102,241,0.18) 0%, rgba(16,185,129,0.14) 100%) !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.55) inset, 0 2px 12px rgba(99,102,241,0.25);
     outline: none;
 }
 .player-row-selected td {
-    border-top: 1px solid rgba(99,102,241,0.2) !important;
-    border-bottom: 1px solid rgba(99,102,241,0.2) !important;
+    border-top: 2px solid rgba(99,102,241,0.4) !important;
+    border-bottom: 2px solid rgba(99,102,241,0.4) !important;
+    color: inherit !important;
+}
+/* ダークモード専用の選手選択ハイライト */
+[data-theme="dark"] .player-row-selected {
+    background: linear-gradient(90deg, rgba(129,140,248,0.35) 0%, rgba(52,211,153,0.25) 100%) !important;
+    box-shadow: 0 0 0 3px rgba(129,140,248,0.8) inset, 0 2px 16px rgba(129,140,248,0.4);
+}
+[data-theme="dark"] .player-row-selected td {
+    border-top: 2px solid rgba(129,140,248,0.6) !important;
+    border-bottom: 2px solid rgba(129,140,248,0.6) !important;
+    color: #e2e8f0 !important;
+    font-weight: 600;
 }
 
     /* ═══════════════════════════════════════════════════════════
@@ -1071,6 +1083,18 @@
         background: #334155;
         border-color: #475569;
     }
+
+/* v52.178: シェイクアニメーション（エラー時） */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    15%       { transform: translateX(-6px); }
+    30%       { transform: translateX(6px); }
+    45%       { transform: translateX(-4px); }
+    60%       { transform: translateX(4px); }
+    75%       { transform: translateX(-2px); }
+}
+.shake-anim { animation: shake 0.5s ease-in-out; }
+
 </style>
 <script>
 // ========== v52.163.2: ラベル生成関数を最上位に移動 ==========
@@ -2907,7 +2931,7 @@ window.closeImportModal = function() {
             console.log('[Card Analysis] DB保存開始:', window.currentAnalyzedCard);
             
             // IndexedDB を開く
-            const dbRequest = indexedDB.open('eS_League_DB', 3);
+            const dbRequest = indexedDB.open('eS_League_DB', 4);
             
             dbRequest.onerror = function() {
                 throw new Error('データベースを開けません');
@@ -3009,7 +3033,7 @@ window.closeImportModal = function() {
         console.log('[Phase 4.11.55] 🚀 teams テーブル初期化開始');
         
         return new Promise((resolve, reject) => {
-            const dbRequest = indexedDB.open('eS_League_DB', 3);
+            const dbRequest = indexedDB.open('eS_League_DB', 4);
             
             let isUpgradeNeeded = false;
             
@@ -3146,7 +3170,7 @@ window.closeImportModal = function() {
         try {
             console.log('[Team Management] チーム一覧読み込み開始');
             
-            const dbRequest = indexedDB.open('eS_League_DB', 3);
+            const dbRequest = indexedDB.open('eS_League_DB', 4);
             
             dbRequest.onsuccess = function(event) {
                 const db = event.target.result;
@@ -3398,7 +3422,7 @@ window.closeImportModal = function() {
         try {
             console.log('[Team Management] チーム保存:', teamName);
             
-            const dbRequest = indexedDB.open('eS_League_DB', 3);
+            const dbRequest = indexedDB.open('eS_League_DB', 4);
             
             // Phase 4.11.55: teams テーブル作成
     dbRequest.onupgradeneeded = function(event) {
@@ -3491,7 +3515,7 @@ window.closeImportModal = function() {
         try {
             console.log('[Team Management] チーム削除:', team.name);
             
-            const dbRequest = indexedDB.open('eS_League_DB', 3);
+            const dbRequest = indexedDB.open('eS_League_DB', 4);
             
             dbRequest.onsuccess = function(event) {
                 const db = event.target.result;
@@ -4043,7 +4067,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="flex items-center gap-3 mt-2">
                 <span class="text-gray-400 uppercase tracking-widest text-[10px]">INTEGRATED MANAGEMENT CONSOLE</span>
-                <span class="bg-emerald-600 text-white px-3 py-0.5 rounded-full text-[10px] tracking-widest uppercase">SYSTEM v52.175 Phase 4.20gle)</span>
+                <span class="bg-emerald-600 text-white px-3 py-0.5 rounded-full text-[10px] tracking-widest uppercase">SYSTEM v52.179 Phase 4.23</span>
                 <span id="syncStatus" class="text-[10px] text-gray-400 uppercase tracking-widest flex items-center gap-1"></span>
             </div>
         </div>
@@ -4108,10 +4132,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 min-h-0">
                     <div class="lg:col-span-2 space-y-2">
+                        <button onclick="window.setChartMetric('ai')" id="tab-ai" class="metric-tab inactive w-full p-3 rounded-xl text-[10px] uppercase font-bold border-2 border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-all">🤖 AI評価 & 質問</button>
+                        <div class="border-t border-slate-200 my-1"></div>
                         <button onclick="window.setChartMetric('assists')" id="tab-assists" class="metric-tab active w-full p-3 rounded-xl text-[10px] uppercase">アシスト</button>
                         <button onclick="window.setChartMetric('goals')" id="tab-goals" class="metric-tab inactive w-full p-3 rounded-xl text-[10px] uppercase">ゴール</button>
                         <button onclick="window.setChartMetric('apps')" id="tab-apps" class="metric-tab inactive w-full p-3 rounded-xl text-[10px] uppercase">出場数</button>
-                        <button onclick="window.setChartMetric('ai')" id="tab-ai" class="metric-tab inactive w-full p-3 rounded-xl text-[10px] uppercase">AI評価 & 質問</button>
                     </div>
                     <div class="lg:col-span-10 bg-slate-50 rounded-[2rem] p-6 relative h-full min-h-0 flex flex-col">
                         <div id="chartContainer" class="w-full h-full relative">
@@ -4120,10 +4145,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         <!-- AI Container -->
                         <div id="aiContainer" class="hidden absolute inset-0 bg-white p-6 overflow-y-auto rounded-[2rem] border-2 border-indigo-50 flex flex-col z-20">
-                             <!-- Mode Switch -->
-                             <div class="flex gap-4 border-b border-indigo-100 mb-4 pb-2">
-                                <button onclick="window.switchAIMode('individual')" id="ai-mode-individual" class="ai-mode-btn active text-xs uppercase tracking-widest pb-2">👤 個人分析</button>
-                                <button onclick="window.switchAIMode('query')" id="ai-mode-query" class="ai-mode-btn text-xs uppercase tracking-widest pb-2">🤖 DB探求 (AI Query)</button>
+                             <!-- Mode Switch (v52.178 大型カード形式) -->
+                             <div class="grid grid-cols-2 gap-3 mb-5">
+                                <button onclick="window.switchAIMode('individual')" id="ai-mode-individual"
+                                    class="ai-mode-btn active group flex flex-col items-center gap-1 p-3 rounded-2xl border-2 border-indigo-200 bg-indigo-50 hover:bg-indigo-100 transition-all text-indigo-700">
+                                    <span class="text-2xl">👤</span>
+                                    <span class="text-[10px] font-bold uppercase tracking-widest">個人分析</span>
+                                    <span class="text-[8px] text-indigo-400">選手を選んでAI評価</span>
+                                </button>
+                                <button onclick="window.switchAIMode('query')" id="ai-mode-query"
+                                    class="ai-mode-btn group flex flex-col items-center gap-1 p-3 rounded-2xl border-2 border-purple-200 bg-purple-50 hover:bg-purple-100 transition-all text-purple-700">
+                                    <span class="text-2xl">🤖</span>
+                                    <span class="text-[10px] font-bold uppercase tracking-widest">DB探究</span>
+                                    <span class="text-[8px] text-purple-400">自由質問AIクエリ</span>
+                                </button>
                              </div>
 
                              <!-- Individual Mode -->
@@ -4300,8 +4335,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div class="lg:col-span-4 space-y-6">
                 <div class="flex gap-4 mb-4 border-b border-slate-200 pb-2">
-                    <button onclick="window.switchAdminMode('auto')" id="admin-mode-auto" class="admin-tab-btn active uppercase text-[10px] tracking-widest pb-2">AI手動解析 (画像UP)</button>
-                    <button onclick="window.switchAdminMode('manual')" id="admin-mode-manual" class="admin-tab-btn uppercase text-[10px] tracking-widest pb-2">AI自動解析 (Batch Queue)</button>
+                    <button onclick="window.switchAdminMode('auto')" id="admin-mode-auto" class="admin-tab-btn active uppercase text-[10px] tracking-widest pb-2">AI自動解析 (Batch Queue)</button>
+                    <button onclick="window.switchAdminMode('manual')" id="admin-mode-manual" class="admin-tab-btn uppercase text-[10px] tracking-widest pb-2">AI手動解析 (画像UP)</button>
                 </div>
                 <div class="bg-white p-8 rounded-[2rem] shadow-sm border-4 border-emerald-100">
                     <!-- Manual Mode -->
@@ -4399,7 +4434,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         </div>
                     </div>
-                    <button id="batchApplyBtn" onclick="window.startSaveProcess()" disabled class="bg-emerald-600 text-white px-10 py-4 rounded-2xl shadow-xl uppercase hover:bg-emerald-700 transition disabled:opacity-50">✅ 保存 & 反映</button>
+                    <button id="batchApplyBtn" onclick="window.smartStartSaveProcess()" class="bg-emerald-600 text-white px-10 py-4 rounded-2xl shadow-xl uppercase hover:bg-emerald-700 transition">✅ DB に反映</button>
                 <button onclick="window.openBulkImportModal()" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl shadow-xl uppercase hover:from-indigo-700 hover:to-purple-700 transition flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                     📥 選手データ一括インポート
@@ -4485,7 +4520,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             <!-- 自動割り振りパネル -->
             <div id="card-panel-auto" class="bg-white p-8 rounded-[2rem] shadow-sm border-4 border-indigo-100 mb-8">
-                <h3 class="text-2xl text-indigo-900 mb-2 uppercase">🤖 記事URLからの自動割り振り</h3>
+                <h3 class="text-2xl font-bold text-indigo-700 mb-2 uppercase bg-indigo-50 px-4 py-2 rounded-xl border-l-4 border-indigo-500">🤖 記事URLからの自動割り振り</h3>
                 <p class="text-xs text-slate-500 mb-8 leading-relaxed">
                     公式サイトの記事ID（News No.）を指定して、AIに記事のテキストを自動フェッチ・解析させます。<br>
                     記事内の「選手名(所属チーム)」リストから、該当する選手に自動でイベントラベル（例: CNST01）を付与します。
@@ -4514,8 +4549,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="mb-6">
                     <div class="flex justify-between items-end mb-2 px-2">
                         <p class="text-[10px] text-slate-400 uppercase tracking-widest">解析キュー</p>
-                        <div class="bg-emerald-100 text-emerald-800 px-4 py-1.5 rounded-full text-[10px] flex gap-2 items-center shadow-sm">
-                            総合検出: <span id="cardTotalParsedCount" class="text-lg">0</span> 人
+                        <div class="bg-emerald-600 text-white px-4 py-1.5 rounded-full text-[10px] flex gap-2 items-center shadow-sm font-bold">
+                            総合検出: <span id="cardTotalParsedCount" class="text-lg font-black">0</span> 人
                         </div>
                     </div>
                     <div id="cardQueueContainer" class="bg-slate-50 border border-slate-200 rounded-2xl p-4 min-h-[150px] max-h-[300px] overflow-y-auto space-y-2 custom-scrollbar">
@@ -5515,7 +5550,8 @@ async function runAIQuery() {
         return { name: p.name, nick: p.nickname || "", team: team, labels: p.labels || [], latest: { n: l.number, r: l.overall||l.rating||0, g: l.goals||0, a: l.assists||0, app: l.apps||0, wr: l.winRate||0, cs: l.cleanSheets||0, y: l.yellow||0, rd: l.red||0, st: l.status||"在籍" }, life: { g: lf.goals||0, a: lf.assists||0, app: lf.apps||0, cs: lf.cleanSheets||0, y: lf.yellow||0, rd: lf.red||0 } };
     });
     try {
-        const payload = { contents: [{ parts: [ { text: `あなたはeスポーツリーグのデータベースアナリストです。以下のJSONデータ（選手リスト）を分析し、ユーザーの質問に答えてください。\n\n【重要：用語定義】\n・「特殊カード」や「カード」という質問は、Yellow/Redカードではなく、必ず「labels (例: TOTW, POTM)」を指すものとして回答せよ。\n\nデータキー説明: n:背番号(Number), r:総合(Rating), g:得点(Goals), a:アシスト(Assists), app:出場数, wr:勝率(WinRate), cs:完封(CleanSheets), y:警告(YellowCards), rd:退場(RedCards), st:在籍状況, nick:ニックネーム, labels:特殊カード\n\n質問: "${q}". 回答は簡潔かつ専門的に。ランキングを出力する場合は、必ずMarkdownのテーブル記法（| 列 | 列 |...）を使用してください。` }, { text: JSON.stringify(contextData).substring(0, 900000) } ] }] };
+        const rankingCtx = await window.getTournamentRankingContext().catch(()=>'');
+        const payload = { contents: [{ parts: [ { text: `あなたはeスポーツリーグのデータベースアナリストです。以下のJSONデータ（選手リスト）を分析し、ユーザーの質問に答えてください。${rankingCtx ? '\\n\\n' + rankingCtx : ''}\n\n【重要：用語定義】\n・「特殊カード」や「カード」という質問は、Yellow/Redカードではなく、必ず「labels (例: TOTW, POTM)」を指すものとして回答せよ。\n\nデータキー説明: n:背番号(Number), r:総合(Rating), g:得点(Goals), a:アシスト(Assists), app:出場数, wr:勝率(WinRate), cs:完封(CleanSheets), y:警告(YellowCards), rd:退場(RedCards), st:在籍状況, nick:ニックネーム, labels:特殊カード\n\n質問: "${q}". 回答は簡潔かつ専門的に。ランキングを出力する場合は、必ずMarkdownのテーブル記法（| 列 | 列 |...）を使用してください。` }, { text: JSON.stringify(contextData).substring(0, 900000) } ] }] };
         statusText.innerText = '回答生成中...';
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'application/json' }, signal: currentAIQueryController.signal });
         const json = await res.json();
@@ -5614,6 +5650,18 @@ window.renderCardMergeModal = function() {
     container.innerHTML = currentCardBatchConflicts.map((batch, eIdx) => { 
         // v50.63: Added Link Button
         const linkBtn = batch.newsId ? `<a href="https://es-league.games/japan/news/data.php?newsno=${batch.newsId}" target="_blank" class="ml-auto text-[10px] bg-white text-blue-600 px-3 py-1.5 rounded-lg border border-blue-200 hover:bg-blue-50 flex items-center gap-1 font-bold shadow-sm">📄 記事を確認</a>` : '';
+        // FIX6: 記事日付 vs DB日付の比較バッジを生成
+        const articleDateRaw = batch.publishDate || '';
+        const articleDateDisp = articleDateRaw ? articleDateRaw.replace(/-/g, '.') : '日付不明';
+        // batch.conflicts から最初のマッチした選手のDB更新日を取得
+        const firstMatch = batch.conflicts.find(c => c.simMatch);
+        const dbPlayer = firstMatch ? firstMatch.simMatch : null;
+        const dbDateRaw = dbPlayer ? (dbPlayer.updatedAt || dbPlayer.createdAt || '') : '';
+        const dbDateDisp = dbDateRaw ? dbDateRaw.substring(0, 10).replace(/-/g, '.') : 'DB未登録';
+        const dateBadge = `<div class="flex items-center gap-2 mt-1">
+            <span class="text-[9px] bg-blue-100 text-blue-700 px-2 py-1 rounded-full border border-blue-200 font-bold">記事: ${articleDateDisp}</span>
+            ${dbDateRaw ? `<span class="text-[9px] text-slate-400 font-bold">vs</span><span class="text-[9px] bg-slate-100 text-slate-600 px-2 py-1 rounded-full border border-slate-200 font-bold">DB: ${dbDateDisp}</span>` : '<span class="text-[9px] bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full border border-yellow-200">DB未登録</span>'}
+        </div>`;
         
         const conflictHtml = batch.conflicts.map((c, pIdx) => { 
             const simName = c.simMatch ? c.simMatch.name : 'new'; 
@@ -5639,7 +5687,7 @@ window.renderCardMergeModal = function() {
                 </div>
                 <div class="flex items-center justify-between mt-6"> <div class="${bgClass} p-4 rounded-xl border flex-1 relative"> <span class="absolute -top-3 left-4 ${badgeColor} text-white text-[9px] px-2 py-1 rounded">カード検出PSID</span> <div class="font-bold text-lg ${textColor} mt-2">${c.newPsid}</div> ${teamHint} </div> <div class="mx-6 text-2xl text-slate-300 font-bold">➡</div> <div class="flex-1"> <div class="flex justify-between items-end mb-2"> <label class="text-[10px] text-slate-500 block uppercase font-bold tracking-widest">紐付ける既存の選手を選択</label> <div class="relative"> <span class="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-xs">🔍</span> <input type="text" placeholder="名前・チーム・ラベルで検索..." class="text-[10px] pl-6 pr-2 py-1.5 border-2 border-slate-200 rounded-lg outline-none focus:border-blue-500 transition shadow-sm w-48" oninput="window.filterMergeSelectOptions(this, 'cardMergeSelect_${eIdx}_${pIdx}')"> </div> </div> <select id="cardMergeSelect_${eIdx}_${pIdx}" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-sm outline-none focus:border-blue-500 transition-colors cursor-pointer"> ${window.generateCardMergeOptionsHtml(simName)} </select> </div> </div> </div> `; 
         }).join(''); 
-        return ` <div class="mb-8 border-4 border-blue-100 rounded-[2rem] overflow-hidden shadow-sm"> <div class="bg-blue-100 px-8 py-4 flex items-center gap-4 border-b border-blue-200"> <label class="text-xs text-blue-800 uppercase tracking-widest whitespace-nowrap">付与するラベル名:</label>
+        return ` <div class="mb-8 border-4 border-blue-100 rounded-[2rem] overflow-hidden shadow-sm"> <div class="bg-blue-100 px-8 py-4 flex flex-col gap-2 border-b border-blue-200"> <div class="flex items-center gap-4"><span class="text-[11px] text-blue-800 font-bold truncate max-w-xs">${batch.rawTitle || batch.eventName || '記事'}</span>${dateBadge}</div><div class="flex items-center gap-4"><label class="text-xs text-blue-800 uppercase tracking-widest whitespace-nowrap">付与するラベル名:</label>
       <div style="margin: 10px 0; padding: 10px; background: #f0f0f0; border-radius: 5px;">
         <strong>紐付け方法を選択:</strong>
         <div style="margin-top: 8px;">
@@ -9053,6 +9101,666 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 console.log('[v52.177] ✅ Sprint3 JS loaded (API Pool + Parallel Batch + Detail Panel + CSV + URL Hash)');
+// ===== v52.178: smartStartSaveProcess (DB反映ボタン常時表示対応) =====
+window.smartStartSaveProcess = function() {
+    const hasPending = (
+        (batchPendingResults.latest && batchPendingResults.latest.length > 0) ||
+        (batchPendingResults.lifetime && batchPendingResults.lifetime.length > 0)
+    );
+    const hasQueueDone = autoAnalysisQueue && autoAnalysisQueue.some(x => x.status === 'done');
+    
+    if (!hasPending && !hasQueueDone) {
+        // 未解析時: 警告メッセージを表示
+        showMessage('⚠️ まだ解析データがありません。先に「解析を開始」してください。', 'error');
+        // ボタンを一瞬揺らすアニメーション
+        const btn = document.getElementById('batchApplyBtn');
+        if (btn) {
+            btn.classList.add('shake-anim');
+            setTimeout(() => btn.classList.remove('shake-anim'), 600);
+        }
+        return;
+    }
+    // 解析データあり → 通常の保存処理へ
+    window.startSaveProcess();
+};
+// ===== v52.178: smartStartSaveProcess 終了 =====
+
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     大会ランキング機能 (v52.179 Phase 4.23 Tournament Ranking)
+     ─ openTournamentRanking(leagueId)
+     ─ fetchAndSaveRanking(leagueId)
+     ─ loadRankingHistory(leagueId)
+     ─ renderRankingModal(data, history)
+     ─ getTournamentRankingContext()
+═══════════════════════════════════════════════════════════════ -->
+
+<!-- 大会ランキング モーダル -->
+<div id="tournamentRankingModal" class="fixed inset-0 bg-black/60 z-[9999] hidden flex items-center justify-center p-4">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+    <!-- ヘッダー -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-amber-500 to-orange-500 text-white">
+      <div>
+        <h2 class="text-xl font-bold" id="rankingModalTitle">🏆 大会ランキング</h2>
+        <p class="text-sm text-amber-100" id="rankingModalSubtitle">リーグ順位表・個人ランキング</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="rankingFetchBtn" onclick="window.fetchAndSaveRanking()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-1">
+          <span id="rankingFetchIcon">🔄</span> データ取得
+        </button>
+        <button onclick="window.closeTournamentRanking()" class="text-white/80 hover:text-white text-2xl font-light px-2">✕</button>
+      </div>
+    </div>
+    <!-- タブ -->
+    <div class="flex border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 overflow-x-auto shrink-0">
+      <button onclick="window.switchRankingTab('overall')" id="rtab-overall" class="ranking-tab-btn active px-4 py-3 text-sm font-bold whitespace-nowrap border-b-2 border-amber-500 text-amber-600">📊 総合順位</button>
+      <button onclick="window.switchRankingTab('goals')" id="rtab-goals" class="ranking-tab-btn px-4 py-3 text-sm font-bold whitespace-nowrap border-b-2 border-transparent text-slate-500 hover:text-slate-700">⚽ 得点ランク</button>
+      <button onclick="window.switchRankingTab('assists')" id="rtab-assists" class="ranking-tab-btn px-4 py-3 text-sm font-bold whitespace-nowrap border-b-2 border-transparent text-slate-500 hover:text-slate-700">🎯 アシストランク</button>
+      <button onclick="window.switchRankingTab('cleansheets')" id="rtab-cleansheets" class="ranking-tab-btn px-4 py-3 text-sm font-bold whitespace-nowrap border-b-2 border-transparent text-slate-500 hover:text-slate-700">🧤 無失点ランク</button>
+      <button onclick="window.switchRankingTab('trend')" id="rtab-trend" class="ranking-tab-btn px-4 py-3 text-sm font-bold whitespace-nowrap border-b-2 border-transparent text-slate-500 hover:text-slate-700">📈 推移グラフ</button>
+      <button onclick="window.switchRankingTab('history')" id="rtab-history" class="ranking-tab-btn px-4 py-3 text-sm font-bold whitespace-nowrap border-b-2 border-transparent text-slate-500 hover:text-slate-700">🗓️ 履歴</button>
+    </div>
+    <!-- コンテンツ -->
+    <div class="flex-1 overflow-y-auto p-6" id="rankingModalContent">
+      <div class="text-center text-slate-400 py-12">
+        <div class="text-5xl mb-3">🏆</div>
+        <p class="font-bold text-lg">大会ランキングを読み込んでいます...</p>
+        <p class="text-sm mt-2">「🔄 データ取得」ボタンで最新データを取得できます</p>
+      </div>
+    </div>
+    <!-- フッター: URL + 最終更新 -->
+    <div class="px-6 py-3 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs text-slate-500">
+      <span id="rankingModalUrl" class="font-mono truncate max-w-xs"></span>
+      <span id="rankingModalLastUpdated">-</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// 大会ランキング機能 (v52.179)
+// ═══════════════════════════════════════════════════════════════
+
+let currentRankingLeagueId = null;
+let currentRankingData = null;
+let rankingTrendChart = null;
+
+// DB helper - tournamentRankings ストア
+function openRankingDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('eS_League_DB', 4);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('tournamentRankings')) {
+        const s = db.createObjectStore('tournamentRankings', { keyPath: 'id' });
+        s.createIndex('leagueId', 'leagueId', { unique: false });
+        s.createIndex('date', 'date', { unique: false });
+      }
+    };
+  });
+}
+
+async function saveRankingToDB(rankingData) {
+  const db = await openRankingDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('tournamentRankings', 'readwrite');
+    const store = tx.objectStore('tournamentRankings');
+    store.put(rankingData);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function getRankingHistory(leagueId) {
+  const db = await openRankingDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('tournamentRankings', 'readonly');
+    const idx = tx.objectStore('tournamentRankings').index('leagueId');
+    const req = idx.getAll(leagueId);
+    req.onsuccess = () => resolve((req.result || []).sort((a, b) => new Date(b.date) - new Date(a.date)));
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function deleteOldRankings(leagueId, keepCount = 30) {
+  const history = await getRankingHistory(leagueId);
+  if (history.length <= keepCount) return;
+  const db = await openRankingDB();
+  const toDelete = history.slice(keepCount);
+  return new Promise((resolve) => {
+    const tx = db.transaction('tournamentRankings', 'readwrite');
+    const store = tx.objectStore('tournamentRankings');
+    toDelete.forEach(r => store.delete(r.id));
+    tx.oncomplete = () => resolve();
+  });
+}
+
+// 大会ランキングモーダルを開く
+window.openTournamentRanking = async function(leagueId) {
+  if (!leagueId) { showMessage('リーグIDが不明です', 'error'); return; }
+  currentRankingLeagueId = String(leagueId).padStart(4, '0');
+  const url = `https://es-league.games/japan/fifa/league/?leagueno=${currentRankingLeagueId}`;
+  const modal = document.getElementById('tournamentRankingModal');
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+
+  document.getElementById('rankingModalTitle').textContent = `🏆 大会ランキング (リーグ #${currentRankingLeagueId})`;
+  document.getElementById('rankingModalSubtitle').textContent = `leagueno=${currentRankingLeagueId}`;
+  document.getElementById('rankingModalUrl').textContent = url;
+  document.getElementById('rankingModalLastUpdated').textContent = '読込中...';
+
+  // 保存済みの最新データをまず表示
+  try {
+    const history = await getRankingHistory(currentRankingLeagueId);
+    if (history.length > 0) {
+      currentRankingData = history[0];
+      window.switchRankingTab('overall');
+      document.getElementById('rankingModalLastUpdated').textContent =
+        `最終取得: ${currentRankingData.date} ${currentRankingData.fetchedAt ? new Date(currentRankingData.fetchedAt).toLocaleTimeString('ja-JP') : ''}`;
+    } else {
+      document.getElementById('rankingModalContent').innerHTML = `
+        <div class="text-center text-slate-400 py-12">
+          <div class="text-5xl mb-3">📭</div>
+          <p class="font-bold text-lg">まだデータがありません</p>
+          <p class="text-sm mt-2 mb-4">「🔄 データ取得」ボタンで最新のランキングデータを取得してください</p>
+          <p class="text-xs text-slate-400 font-mono">${url}</p>
+        </div>`;
+      document.getElementById('rankingModalLastUpdated').textContent = 'データなし';
+    }
+  } catch(e) {
+    console.error('ランキング読込エラー:', e);
+  }
+};
+
+window.closeTournamentRanking = function() {
+  const modal = document.getElementById('tournamentRankingModal');
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+  if (rankingTrendChart) { rankingTrendChart.destroy(); rankingTrendChart = null; }
+};
+
+// データ取得 (fetchHtmlWithFallback + Gemini AI 解析)
+window.fetchAndSaveRanking = async function() {
+  if (!currentRankingLeagueId) return;
+  const key = window.getApiKey ? window.getApiKey() : null;
+  if (!key) { showMessage('APIキーを設定してください', 'error'); return; }
+
+  const btn = document.getElementById('rankingFetchBtn');
+  const icon = document.getElementById('rankingFetchIcon');
+  btn.disabled = true;
+  icon.textContent = '⏳';
+  document.getElementById('rankingModalContent').innerHTML = `
+    <div class="text-center py-12">
+      <div class="animate-spin text-4xl mb-4">⚙️</div>
+      <p class="font-bold text-slate-600 dark:text-slate-300">ランキングデータ取得中...</p>
+      <p class="text-sm text-slate-400 mt-2">CORSプロキシ経由でページを取得し、AIで解析します</p>
+    </div>`;
+
+  const url = `https://es-league.games/japan/fifa/league/?leagueno=${currentRankingLeagueId}`;
+  try {
+    // Step 1: HTMLを取得
+    document.getElementById('rankingModalContent').innerHTML = `<div class="text-center py-8"><div class="animate-spin text-3xl mb-3">🌐</div><p class="text-sm text-slate-500">Step 1/3: ページHTMLを取得中...</p></div>`;
+    const html = await fetchHtmlWithFallback(url, null);
+
+    // Step 2: Gemini AIで解析
+    document.getElementById('rankingModalContent').innerHTML = `<div class="text-center py-8"><div class="animate-bounce text-3xl mb-3">🤖</div><p class="text-sm text-slate-500">Step 2/3: AIがランキングデータを解析中...</p></div>`;
+    const prompt = `以下はeS-Leagueの大会ページ(leagueno=${currentRankingLeagueId})のHTMLです。
+以下のJSONスキーマで全ランキングデータを抽出してください。
+
+{
+  "leagueTitle": "大会名",
+  "updatedAt": "更新日時文字列",
+  "overall": [
+    {"rank": 1, "club": "クラブ名", "points": 30, "played": 10, "wins": 9, "draws": 3, "losses": 1, "goalsFor": 25, "goalsAgainst": 8, "goalDiff": 17, "form": "WWWDW"}
+  ],
+  "goals": [{"rank": 1, "player": "PSID", "club": "クラブ名", "count": 15}],
+  "assists": [{"rank": 1, "player": "PSID", "club": "クラブ名", "count": 10}],
+  "cleanSheets": [{"rank": 1, "player": "PSID", "club": "クラブ名", "count": 8}]
+}
+
+HTMLが不完全な場合は取得できたデータのみ入れてください。JSONのみ返答してください。
+
+HTML:
+${html ? html.substring(0, 15000) : '(取得失敗)'}`;
+
+    const payload = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.1 }
+    };
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`, {
+      method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'application/json' }
+    });
+    const json = await res.json();
+    const rawText = json.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+
+    // JSON抽出
+    const jsonMatch = rawText.match(/```json\n?([\s\S]+?)```/) || rawText.match(/({[\s\S]+})/);
+    const parsed = JSON.parse(jsonMatch ? jsonMatch[1] : rawText);
+
+    // Step 3: 保存
+    document.getElementById('rankingModalContent').innerHTML = `<div class="text-center py-8"><div class="text-3xl mb-3">💾</div><p class="text-sm text-slate-500">Step 3/3: データをIndexedDBに保存中...</p></div>`;
+    const now = new Date();
+    const dateStr = now.toISOString().slice(0, 10);
+    const rankingEntry = {
+      id: `${currentRankingLeagueId}_${now.toISOString()}`,
+      leagueId: currentRankingLeagueId,
+      date: dateStr,
+      fetchedAt: now.getTime(),
+      leagueTitle: parsed.leagueTitle || `リーグ #${currentRankingLeagueId}`,
+      updatedAt: parsed.updatedAt || dateStr,
+      overall: parsed.overall || [],
+      goals: parsed.goals || [],
+      assists: parsed.assists || [],
+      cleanSheets: parsed.cleanSheets || []
+    };
+    await saveRankingToDB(rankingEntry);
+    await deleteOldRankings(currentRankingLeagueId, 52); // 最大52週分保持
+
+    currentRankingData = rankingEntry;
+    document.getElementById('rankingModalTitle').textContent = `🏆 ${rankingEntry.leagueTitle}`;
+    document.getElementById('rankingModalLastUpdated').textContent =
+      `最終取得: ${dateStr} ${now.toLocaleTimeString('ja-JP')}`;
+    window.switchRankingTab('overall');
+    showMessage('ランキングデータを取得・保存しました', 'success');
+
+  } catch(e) {
+    console.error('ランキング取得エラー:', e);
+    document.getElementById('rankingModalContent').innerHTML = `
+      <div class="text-center py-12">
+        <div class="text-5xl mb-3">⚠️</div>
+        <p class="font-bold text-red-600">データ取得に失敗しました</p>
+        <p class="text-sm text-slate-500 mt-2">${e.message}</p>
+        <p class="text-xs text-slate-400 mt-3">CORSプロキシが利用できない場合、<br>下の「手動入力」ボタンからJSONを直接貼り付けてください</p>
+        <button onclick="window.openManualRankingInput()" class="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-indigo-700">📋 手動入力</button>
+      </div>`;
+    showMessage('ランキング取得失敗: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    icon.textContent = '🔄';
+  }
+};
+
+// タブ切り替え
+window.switchRankingTab = function(tab) {
+  document.querySelectorAll('.ranking-tab-btn').forEach(b => {
+    b.classList.remove('border-amber-500', 'text-amber-600', 'active');
+    b.classList.add('border-transparent', 'text-slate-500');
+  });
+  const active = document.getElementById(`rtab-${tab}`);
+  if (active) {
+    active.classList.add('border-amber-500', 'text-amber-600', 'active');
+    active.classList.remove('border-transparent', 'text-slate-500');
+  }
+  if (!currentRankingData) {
+    document.getElementById('rankingModalContent').innerHTML = `<div class="text-center py-12 text-slate-400"><p>データを取得してください</p></div>`;
+    return;
+  }
+  const content = document.getElementById('rankingModalContent');
+  switch(tab) {
+    case 'overall':    content.innerHTML = renderOverallTable(currentRankingData); break;
+    case 'goals':      content.innerHTML = renderIndividualRanking(currentRankingData.goals, '⚽ 得点ランキング', '得点', 'goals'); break;
+    case 'assists':    content.innerHTML = renderIndividualRanking(currentRankingData.assists, '🎯 アシストランキング', 'アシスト', 'assists'); break;
+    case 'cleansheets':content.innerHTML = renderIndividualRanking(currentRankingData.cleanSheets, '🧤 無失点ランキング', '無失点', 'cleanSheets'); break;
+    case 'trend':      renderTrendTab(content); break;
+    case 'history':    renderHistoryTab(content); break;
+  }
+};
+
+function renderOverallTable(data) {
+  if (!data.overall || data.overall.length === 0) {
+    return `<div class="text-center py-8 text-slate-400"><p>総合順位データがありません</p><button onclick="window.fetchAndSaveRanking()" class="mt-3 bg-amber-500 text-white px-4 py-2 rounded-lg text-sm">データ取得</button></div>`;
+  }
+  const rows = data.overall.map(r => {
+    const formHtml = (r.form || '').split('').map(c =>
+      c === 'W' ? `<span class="bg-green-500 text-white px-1 py-0.5 rounded text-[10px] font-bold">W</span>` :
+      c === 'D' ? `<span class="bg-yellow-400 text-white px-1 py-0.5 rounded text-[10px] font-bold">D</span>` :
+      c === 'L' ? `<span class="bg-red-500 text-white px-1 py-0.5 rounded text-[10px] font-bold">L</span>` : ''
+    ).join(' ');
+    const rankBadge = r.rank <= 3 ?
+      ['🥇','🥈','🥉'][r.rank-1] + ` <span class="font-bold">${r.rank}</span>` :
+      `<span class="text-slate-500">${r.rank}</span>`;
+    return `<tr class="border-b border-slate-100 dark:border-slate-700 hover:bg-amber-50 dark:hover:bg-slate-700 transition-colors">
+      <td class="py-2 px-3 text-center">${rankBadge}</td>
+      <td class="py-2 px-3 font-bold text-slate-800 dark:text-white">${r.club || '-'}</td>
+      <td class="py-2 px-3 text-center font-bold text-indigo-600 text-lg">${r.points ?? '-'}</td>
+      <td class="py-2 px-3 text-center text-slate-600">${r.played ?? '-'}</td>
+      <td class="py-2 px-3 text-center text-green-600 font-bold">${r.wins ?? '-'}</td>
+      <td class="py-2 px-3 text-center text-yellow-600">${r.draws ?? '-'}</td>
+      <td class="py-2 px-3 text-center text-red-600">${r.losses ?? '-'}</td>
+      <td class="py-2 px-3 text-center">${r.goalsFor ?? '-'}</td>
+      <td class="py-2 px-3 text-center">${r.goalsAgainst ?? '-'}</td>
+      <td class="py-2 px-3 text-center font-bold ${(r.goalDiff || 0) >= 0 ? 'text-green-600' : 'text-red-600'}">${r.goalDiff !== undefined ? (r.goalDiff >= 0 ? '+' : '') + r.goalDiff : '-'}</td>
+      <td class="py-2 px-3 text-center"><div class="flex gap-0.5 justify-center">${formHtml}</div></td>
+    </tr>`;
+  }).join('');
+  return `
+    <div class="mb-3 text-xs text-slate-500">更新: ${data.updatedAt || data.date} | 取得: ${data.date}</div>
+    <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-100 dark:bg-slate-700">
+          <tr>
+            <th class="py-2 px-3 text-center text-xs font-bold text-slate-600 dark:text-slate-300">順位</th>
+            <th class="py-2 px-3 text-left text-xs font-bold text-slate-600 dark:text-slate-300">クラブ</th>
+            <th class="py-2 px-3 text-center text-xs font-bold text-indigo-600">勝点</th>
+            <th class="py-2 px-3 text-center text-xs text-slate-500">試合</th>
+            <th class="py-2 px-3 text-center text-xs text-green-600">勝</th>
+            <th class="py-2 px-3 text-center text-xs text-yellow-600">分</th>
+            <th class="py-2 px-3 text-center text-xs text-red-600">敗</th>
+            <th class="py-2 px-3 text-center text-xs text-slate-500">得点</th>
+            <th class="py-2 px-3 text-center text-xs text-slate-500">失点</th>
+            <th class="py-2 px-3 text-center text-xs text-slate-600">得失差</th>
+            <th class="py-2 px-3 text-center text-xs text-slate-500">最近5試合</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+function renderIndividualRanking(rankData, title, label, key) {
+  if (!rankData || rankData.length === 0) {
+    return `<div class="text-center py-8 text-slate-400"><p>${title} データがありません</p><button onclick="window.fetchAndSaveRanking()" class="mt-3 bg-amber-500 text-white px-4 py-2 rounded-lg text-sm">データ取得</button></div>`;
+  }
+  const rows = rankData.map(r => {
+    const rankBadge = r.rank <= 3 ? ['🥇','🥈','🥉'][r.rank-1] : r.rank;
+    const barWidth = rankData[0] ? Math.round(((r.count || 0) / (rankData[0].count || 1)) * 100) : 0;
+    // DBの選手データと照合
+    const dbPlayer = typeof playerMaster !== 'undefined' ? playerMaster.find(p => p.name === r.player || p.nickname === r.player) : null;
+    const dbBadge = dbPlayer ? `<span class="ml-1 text-[9px] bg-green-100 text-green-700 px-1 py-0.5 rounded">DB✓</span>` : '';
+    return `<tr class="border-b border-slate-100 dark:border-slate-700 hover:bg-amber-50 dark:hover:bg-slate-700 transition-colors">
+      <td class="py-3 px-4 text-center text-lg">${rankBadge}</td>
+      <td class="py-3 px-4">
+        <div class="font-bold text-slate-800 dark:text-white">${r.player || '-'}${dbBadge}</div>
+        <div class="text-xs text-slate-500">${r.club || '-'}</div>
+      </td>
+      <td class="py-3 px-4 text-center">
+        <div class="font-bold text-2xl text-amber-600">${r.count ?? '-'}</div>
+        <div class="text-xs text-slate-400">${label}</div>
+      </td>
+      <td class="py-3 px-4 w-32">
+        <div class="bg-slate-200 dark:bg-slate-600 rounded-full h-2">
+          <div class="bg-amber-500 h-2 rounded-full transition-all" style="width:${barWidth}%"></div>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  return `
+    <h3 class="text-lg font-bold mb-4 text-slate-700 dark:text-white">${title}</h3>
+    <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">
+      <table class="w-full">
+        <thead class="bg-slate-100 dark:bg-slate-700">
+          <tr>
+            <th class="py-2 px-4 text-center text-xs text-slate-500">順位</th>
+            <th class="py-2 px-4 text-left text-xs text-slate-500">選手 / クラブ</th>
+            <th class="py-2 px-4 text-center text-xs text-amber-600">${label}</th>
+            <th class="py-2 px-4 text-xs text-slate-400">割合</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+// 推移グラフタブ
+async function renderTrendTab(container) {
+  if (!currentRankingLeagueId) return;
+  container.innerHTML = `<div class="text-center py-8"><div class="animate-spin text-2xl">⚙️</div><p class="text-sm text-slate-400 mt-2">履歴データ読込中...</p></div>`;
+  const history = await getRankingHistory(currentRankingLeagueId);
+  if (history.length < 2) {
+    container.innerHTML = `<div class="text-center py-12 text-slate-400">
+      <div class="text-4xl mb-3">📈</div>
+      <p class="font-bold">推移グラフには最低2回のデータ取得が必要です</p>
+      <p class="text-sm mt-2">現在: ${history.length}回分のデータ</p>
+      <p class="text-xs mt-3 text-slate-300">定期的にデータ取得することで週次・月次の推移が確認できます</p>
+    </div>`;
+    return;
+  }
+
+  // 全クラブを収集
+  const allClubs = [...new Set(history.flatMap(h => (h.overall || []).map(r => r.club)))].filter(Boolean);
+
+  container.innerHTML = `
+    <div class="mb-4">
+      <label class="text-sm font-bold text-slate-600 dark:text-slate-300 mr-2">クラブ選択:</label>
+      <select id="trendClubSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm" onchange="window.updateTrendChart()">
+        ${allClubs.map(c => `<option value="${c}">${c}</option>`).join('')}
+      </select>
+      <label class="text-sm font-bold text-slate-600 dark:text-slate-300 ml-4 mr-2">指標:</label>
+      <select id="trendMetricSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm" onchange="window.updateTrendChart()">
+        <option value="points">勝点</option>
+        <option value="wins">勝利数</option>
+        <option value="goalsFor">得点数</option>
+        <option value="goalDiff">得失点差</option>
+      </select>
+    </div>
+    <div class="relative h-64 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+      <canvas id="rankingTrendCanvas"></canvas>
+    </div>
+    <p class="text-xs text-slate-400 mt-2 text-center">取得日: ${history.map(h => h.date).join(' | ')}</p>`;
+
+  // 少し待ってからChart描画
+  setTimeout(() => window.updateTrendChart(history), 100);
+}
+
+window.updateTrendChart = function(historyData) {
+  const clubSel = document.getElementById('trendClubSelect');
+  const metricSel = document.getElementById('trendMetricSelect');
+  if (!clubSel || !metricSel) return;
+  const club = clubSel.value;
+  const metric = metricSel.value;
+
+  getRankingHistory(currentRankingLeagueId).then(history => {
+    if (!history.length) return;
+    const reversed = [...history].reverse(); // 古い順
+    const labels = reversed.map(h => h.date);
+    const values = reversed.map(h => {
+      const row = (h.overall || []).find(r => r.club === club);
+      return row ? (row[metric] ?? null) : null;
+    });
+
+    const canvas = document.getElementById('rankingTrendCanvas');
+    if (!canvas) return;
+    if (rankingTrendChart) { rankingTrendChart.destroy(); }
+    rankingTrendChart = new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: `${club} - ${metric}`,
+          data: values,
+          borderColor: '#f59e0b',
+          backgroundColor: 'rgba(245,158,11,0.1)',
+          borderWidth: 2,
+          pointBackgroundColor: '#f59e0b',
+          pointRadius: 5,
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: false, grid: { color: 'rgba(0,0,0,0.05)' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  });
+};
+
+// 履歴タブ
+async function renderHistoryTab(container) {
+  if (!currentRankingLeagueId) return;
+  const history = await getRankingHistory(currentRankingLeagueId);
+  if (history.length === 0) {
+    container.innerHTML = `<div class="text-center py-12 text-slate-400"><div class="text-4xl mb-3">🗓️</div><p>保存された履歴がありません</p></div>`;
+    return;
+  }
+  const rows = history.map(h => `
+    <tr class="border-b border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors" onclick="window.loadHistorySnapshot('${h.id}')">
+      <td class="py-3 px-4 font-mono text-sm font-bold text-indigo-600">${h.date}</td>
+      <td class="py-3 px-4 text-sm text-slate-700">${h.leagueTitle || '-'}</td>
+      <td class="py-3 px-4 text-center text-sm">${(h.overall || []).length}チーム</td>
+      <td class="py-3 px-4 text-center text-sm">${(h.goals || []).length}件</td>
+      <td class="py-3 px-4 text-xs text-slate-400 font-mono">${h.fetchedAt ? new Date(h.fetchedAt).toLocaleString('ja-JP') : '-'}</td>
+      <td class="py-3 px-4 text-center">
+        <button onclick="event.stopPropagation();window.deleteRankingSnapshot('${h.id}')" class="text-red-400 hover:text-red-600 text-xs px-2 py-1 rounded hover:bg-red-50 transition-colors">🗑️</button>
+      </td>
+    </tr>`).join('');
+  container.innerHTML = `
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-slate-700 dark:text-white">📦 保存済みスナップショット (${history.length}件)</h3>
+      <button onclick="window.exportRankingHistory()" class="bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-700">📤 JSON出力</button>
+    </div>
+    <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-100">
+          <tr>
+            <th class="py-2 px-4 text-left text-xs text-slate-500">日付</th>
+            <th class="py-2 px-4 text-left text-xs text-slate-500">大会名</th>
+            <th class="py-2 px-4 text-center text-xs text-slate-500">総合</th>
+            <th class="py-2 px-4 text-center text-xs text-slate-500">得点</th>
+            <th class="py-2 px-4 text-left text-xs text-slate-500">取得時刻</th>
+            <th class="py-2 px-4 text-center text-xs text-slate-500">削除</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <p class="text-xs text-slate-400 mt-3">行をクリックするとそのスナップショットを表示します（最大52件保存）</p>`;
+}
+
+window.loadHistorySnapshot = async function(snapshotId) {
+  const db = await openRankingDB();
+  const entry = await new Promise((res, rej) => {
+    const tx = db.transaction('tournamentRankings', 'readonly');
+    const req = tx.objectStore('tournamentRankings').get(snapshotId);
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+  if (entry) {
+    currentRankingData = entry;
+    document.getElementById('rankingModalLastUpdated').textContent = `スナップショット: ${entry.date}`;
+    window.switchRankingTab('overall');
+    showMessage(`${entry.date} のスナップショットを表示`, 'success');
+  }
+};
+
+window.deleteRankingSnapshot = async function(snapshotId) {
+  if (!confirm('このスナップショットを削除しますか？')) return;
+  const db = await openRankingDB();
+  await new Promise((res, rej) => {
+    const tx = db.transaction('tournamentRankings', 'readwrite');
+    tx.objectStore('tournamentRankings').delete(snapshotId);
+    tx.oncomplete = () => res();
+    tx.onerror = () => rej(tx.error);
+  });
+  showMessage('削除しました', 'success');
+  window.switchRankingTab('history');
+};
+
+window.exportRankingHistory = async function() {
+  if (!currentRankingLeagueId) return;
+  const history = await getRankingHistory(currentRankingLeagueId);
+  const blob = new Blob([JSON.stringify(history, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `ranking_${currentRankingLeagueId}_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 500);
+};
+
+// 手動入力モード (CORSブロック時の代替)
+window.openManualRankingInput = function() {
+  document.getElementById('rankingModalContent').innerHTML = `
+    <div class="space-y-4">
+      <div class="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4 text-sm text-blue-700 dark:text-blue-300">
+        <p class="font-bold mb-1">📋 手動入力モード</p>
+        <p>大会ページを開き、以下のJSON形式でデータを貼り付けてください。</p>
+        <p class="font-mono text-xs mt-2 bg-white/50 p-2 rounded">
+          URL: https://es-league.games/japan/fifa/league/?leagueno=${currentRankingLeagueId}
+        </p>
+      </div>
+      <textarea id="manualRankingJson" class="w-full h-64 border border-slate-300 rounded-xl p-3 font-mono text-xs"
+        placeholder='{"leagueTitle": "大会名", "overall": [{"rank":1,"club":"FC Example","points":30,...}], "goals": [], "assists": [], "cleanSheets": []}'></textarea>
+      <div class="flex gap-2">
+        <button onclick="window.saveManualRanking()" class="bg-amber-500 text-white px-6 py-2 rounded-lg font-bold hover:bg-amber-600 flex-1">💾 保存</button>
+        <button onclick="window.switchRankingTab('overall')" class="bg-slate-300 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-400">キャンセル</button>
+      </div>
+    </div>`;
+};
+
+window.saveManualRanking = async function() {
+  const json = document.getElementById('manualRankingJson')?.value;
+  if (!json) return;
+  try {
+    const parsed = JSON.parse(json);
+    const now = new Date();
+    const entry = {
+      id: `${currentRankingLeagueId}_${now.toISOString()}`,
+      leagueId: currentRankingLeagueId,
+      date: now.toISOString().slice(0, 10),
+      fetchedAt: now.getTime(),
+      leagueTitle: parsed.leagueTitle || `リーグ #${currentRankingLeagueId}`,
+      updatedAt: parsed.updatedAt || now.toISOString().slice(0, 10),
+      overall: parsed.overall || [],
+      goals: parsed.goals || [],
+      assists: parsed.assists || [],
+      cleanSheets: parsed.cleanSheets || []
+    };
+    await saveRankingToDB(entry);
+    currentRankingData = entry;
+    window.switchRankingTab('overall');
+    showMessage('手動入力データを保存しました', 'success');
+  } catch(e) {
+    showMessage('JSONの形式が正しくありません: ' + e.message, 'error');
+  }
+};
+
+// AIクエリへのコンテキスト提供
+window.getTournamentRankingContext = async function() {
+  try {
+    const db = await openRankingDB();
+    // 全リーグの最新データを取得
+    const all = await new Promise((res, rej) => {
+      const tx = db.transaction('tournamentRankings', 'readonly');
+      const req = tx.objectStore('tournamentRankings').getAll();
+      req.onsuccess = () => res(req.result || []);
+      req.onerror = () => rej(req.error);
+    });
+    if (all.length === 0) return '';
+    // リーグIDごとに最新1件
+    const byLeague = {};
+    all.forEach(r => {
+      if (!byLeague[r.leagueId] || r.fetchedAt > byLeague[r.leagueId].fetchedAt) {
+        byLeague[r.leagueId] = r;
+      }
+    });
+    const ctx = Object.values(byLeague).map(r =>
+      `【大会ランキング: ${r.leagueTitle} (${r.date})】\n` +
+      `総合TOP5: ${(r.overall||[]).slice(0,5).map(x => `${x.rank}.${x.club}(${x.points}pt)`).join(', ')}\n` +
+      `得点TOP3: ${(r.goals||[]).slice(0,3).map(x => `${x.player}(${x.count})`).join(', ')}\n` +
+      `アシストTOP3: ${(r.assists||[]).slice(0,3).map(x => `${x.player}(${x.count})`).join(', ')}\n` +
+      `無失点TOP3: ${(r.cleanSheets||[]).slice(0,3).map(x => `${x.player}(${x.count})`).join(', ')}`
+    ).join('\n\n');
+    return ctx ? `\n\n【大会ランキングデータ】\n${ctx}` : '';
+  } catch(e) {
+    console.warn('ランキングコンテキスト取得エラー:', e);
+    return '';
+  }
+};
+
+// ESC キーで閉じる
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !document.getElementById('tournamentRankingModal').classList.contains('hidden')) {
+    window.closeTournamentRanking();
+  }
+});
 </script>
 
 </body>
