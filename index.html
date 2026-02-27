@@ -1094,6 +1094,146 @@
     75%       { transform: translateX(-2px); }
 }
 .shake-anim { animation: shake 0.5s ease-in-out; }
+/* ── v52.181: リーグ年度フィールド強調スタイル ── */
+.league-year-badge {
+  font-style: italic;
+  font-weight: 800;
+  color: #4f46e5;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  border: 1px solid #c7d2fe;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  display: inline-block;
+  min-width: 36px;
+  text-align: center;
+}
+.league-year-input {
+  font-style: italic;
+  font-weight: 800;
+  color: #4338ca;
+  text-align: center;
+}
+.league-label-display {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.league-season-badge {
+  font-weight: 700;
+  color: #0f172a;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.75rem;
+}
+.league-cat-badge {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.75rem;
+}
+.league-div-badge {
+  font-weight: 700;
+  color: white;
+  background: #10b981;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.7rem;
+}
+.league-div-badge.op {
+  background: #f59e0b;
+}
+.league-form-grid {
+  display: grid;
+  grid-template-columns: 60px 70px 1fr 80px;
+  gap: 6px;
+  align-items: end;
+}
+.league-form-preview {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.72rem;
+  color: #475569;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+
+/* ── v52.180 FIX-D: 統合検索フォームCSSスタイル ── */
+.unified-search-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-width: 280px;
+}
+.unified-search-wrap input {
+  width: 100%;
+  padding: 0.6rem 4.5rem 0.6rem 2.2rem;
+}
+.search-icon {
+  position: absolute;
+  left: 0.55rem;
+  font-size: 0.85rem;
+  pointer-events: none;
+  z-index: 1;
+  line-height: 1;
+}
+.search-kbd {
+  position: absolute;
+  right: 2.2rem;
+  font-size: 0.6rem;
+  color: #94a3b8;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 1px 4px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.search-clear {
+  position: absolute;
+  right: 0.55rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.search-clear:hover { color: #475569; }
+.search-hint {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.7rem;
+  color: #64748b;
+  white-space: nowrap;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.search-hint code {
+  background: #f1f5f9;
+  border-radius: 3px;
+  padding: 1px 4px;
+  font-size: 0.68rem;
+  color: #334155;
+}
 
 </style>
 <script>
@@ -1217,13 +1357,40 @@ window.generateAbbreviation = generateAbbreviation;
 // ========================================
 
 // 37チームのマスターデータ
-const defaultTeams = [{l2: "", l1: "0400", name: "FC Onions", id: "143"}, {l2: "", l1: "0400", name: "WELLDONE", id: "146"}, {l2: "", l1: "0400", name: "Bana11", id: "213"}, {l2: "", l1: "0400", name: "Le Fort FC", id: "361"}, {l2: "", l1: "0400", name: "Aplastar CF", id: "461"}, {l2: "", l1: "0400", name: "Tesuryo", id: "545"}, {l2: "", l1: "0400", name: "SARUs", id: "546"}, {l2: "", l1: "0400", name: "WIZARD OF OZ", id: "628"}, {l2: "", l1: "0400", name: "MK BOMB", id: "076"}, {l2: "", l1: "0400", name: "HANNARI FC", id: "547"}, {l2: "", l1: "0400", name: "BEBLUES", id: "462"}, {l2: "", l1: "0400", name: "SEED JAPAN 2026", id: "071"}, {l2: "", l1: "0400", name: "Lultima Cena", id: "292"}, {l2: "", l1: "0400", name: "ADACHI DRAGON", id: "481"}, {l2: "0036", l1: "0401", name: "El Mago Öz FC", id: "154"}, {l2: "0036", l1: "0401", name: "DHC for MEN", id: "430"}, {l2: "0036", l1: "0401", name: "SEED JAPAN Plus", id: "073"}, {l2: "0036", l1: "0401", name: "AKATUKI", id: "101"}, {l2: "", l1: "0401", name: "WAKAMONO", id: "652"}, {l2: "", l1: "0401", name: "Ardwick", id: "655"}, {l2: "0036", l1: "0401", name: "Hookar", id: "511"}, {l2: "0036", l1: "0402", name: "AKIYAMA CC", id: "702"}, {l2: "", l1: "0402", name: "Stella de lux", id: "698"}, {l2: "0036", l1: "0402", name: "SNOW FANTASIA", id: "212"}, {l2: "0036", l1: "0402", name: "THE HORSE FACE", id: "710"}, {l2: "0036", l1: "0402", name: "Studio Children", id: "544"}, {l2: "", l1: "0402", name: "Forza Perfetta Calcio", id: "694"}, {l2: "", l1: "0402", name: "ArahatikJP", id: "695"}, {l2: "", l1: "0402", name: "OKUMURA KOUKI", id: "626"}, {l2: "", l1: "0402", name: "FC MATSUDO", id: "712"}, {l2: "0036_OP", l1: "0402", name: "AS Maize", id: "722"}, {l2: "0036_OP", l1: "0402", name: "Dynamite!JapanV2", id: "720"}, {l2: "0036_OP", l1: "0402", name: "FC Anarchy", id: "719"}, {l2: "0036_OP", l1: "0402", name: "FC Blau Fuego", id: "723"}, {l2: "0036_OP", l1: "0402", name: "FC SENANO", id: "718"}, {l2: "0036_OP", l1: "0402", name: "La Passione Blu", id: "721"}, {l2: "0036_OP", l1: "0402", name: "R.A.D", id: "510"}];
+const defaultTeams = [{l2: "", l1: "0400", name: "FC Onions", id: "143"}, {l2: "", l1: "0400", name: "WELLDONE", id: "146"}, {l2: "", l1: "0400", name: "Bana11", id: "213"}, {l2: "", l1: "0400", name: "Le Fort FC", id: "361"}, {l2: "", l1: "0400", name: "Aplastar CF", id: "461"}, {l2: "", l1: "0400", name: "Tesuryo", id: "545"}, {l2: "", l1: "0400", name: "SARUs", id: "546"}, {l2: "", l1: "0400", name: "WIZARD OF OZ", id: "628"}, {l2: "", l1: "0400", name: "MK BOMB", id: "076"}, {l2: "", l1: "0400", name: "HANNARI FC", id: "547"}, {l2: "", l1: "0400", name: "BEBLUES", id: "462"}, {l2: "", l1: "0400", name: "SEED JAPAN 2026", id: "071"}, {l2: "", l1: "0400", name: "Lultima Cena", id: "292"}, {l2: "", l1: "0400", name: "ADACHI DRAGON", id: "481"}, {l2: "0036", l1: "0401", name: "El Mago Öz FC", id: "154"}, {l2: "0036", l1: "0401", name: "DHC for MEN", id: "430"}, {l2: "0036", l1: "0401", name: "SEED JAPAN Plus", id: "073"}, {l2: "0036", l1: "0401", name: "AKATUKI", id: "101"}, {l2: "", l1: "0401", name: "WAKAMONO", id: "652"}, {l2: "", l1: "0401", name: "Ardwick", id: "655"}, {l2: "0036", l1: "0401", name: "Hookar", id: "511"}, {l2: "0036", l1: "0402", name: "AKIYAMA CC", id: "702"}, {l2: "", l1: "0402", name: "Stella de lux", id: "698"}, {l2: "0036", l1: "0402", name: "SNOW FANTASIA", id: "212"}, {l2: "0036", l1: "0402", name: "THE HORSE FACE", id: "710"}, {l2: "0036", l1: "0402", name: "Studio Children", id: "544"}, {l2: "", l1: "0402", name: "Forza Perfetta Calcio", id: "694"}, {l2: "", l1: "0402", name: "ArahatikJP", id: "695"}, {l2: "", l1: "0402", name: "OKUMURA KOUKI", id: "626"}, {l2: "", l1: "0402", name: "FC MATSUDO", id: "712"}, {l2: "0036", l1: "0402", name: "AS Maize", id: "722"}, {l2: "0036", l1: "0402", name: "Dynamite!JapanV2", id: "720"}, {l2: "0036", l1: "0402", name: "FC Anarchy", id: "719"}, {l2: "0036", l1: "0402", name: "FC Blau Fuego", id: "723"}, {l2: "0036", l1: "0402", name: "FC SENANO", id: "718"}, {l2: "0036", l1: "0402", name: "La Passione Blu", id: "721"}, {l2: "0036", l1: "0402", name: "R.A.D", id: "510"}];
 
 // リーグラベルマップ
-const defaultLeagueLabelMap = { "": "設定なし", "0400": "17th 1部", "0401": "17th 2部", "0402": "17th 3部", "0036": "17th Judith CUP", "0036_OP": "17th OP" };
+// ── v52.181: リーグカテゴリ 年度/シーズン/リーグ/DIV 構造化管理 ──
+// leagueMeta: { [leagueId]: { year, season, category, div } }
+const defaultLeagueMeta = {
+  "0400": { year: "26",    season: "17th", category: "eS-League",    div: "01部" },
+  "0401": { year: "26",    season: "17th", category: "eS-League",    div: "02部" },
+  "0402": { year: "26",    season: "17th", category: "eS-League",    div: "03部" },
+  "0036": { year: "26",    season: "17th", category: "Judith CUP",   div: "OP"   },
+  "0405": { year: "26",    season: "11th", category: "GrowthLeague", div: "OP"   }
+};
+window.defaultLeagueMeta = defaultLeagueMeta;
+let leagueMeta = { ...defaultLeagueMeta };
+window.leagueMeta = leagueMeta;
+
+// leagueLabelMap は { id → 表示名 } のまま保持 (後方互換)
+function buildLeagueLabel(meta) {
+  if (!meta) return '';
+  return `${meta.year} ${meta.season} ${meta.category} ${meta.div}`;
+}
+const defaultLeagueLabelMap = {
+  "": "設定なし",
+  "0400": buildLeagueLabel(defaultLeagueMeta["0400"]),
+  "0401": buildLeagueLabel(defaultLeagueMeta["0401"]),
+  "0402": buildLeagueLabel(defaultLeagueMeta["0402"]),
+  "0036": buildLeagueLabel(defaultLeagueMeta["0036"]),
+  "0405": buildLeagueLabel(defaultLeagueMeta["0405"])
+};
 
 // leagueLabelMapも初期化
 let leagueLabelMap = { ...defaultLeagueLabelMap };
+leagueMeta = Object.assign({}, defaultLeagueMeta);
+window.leagueMeta = leagueMeta;
 
 // メッセージ表示関数
 function showMessage(m, t) { 
@@ -2364,194 +2531,66 @@ console.log('✅ [appModal] API初期化完了');
 
 </head>
 <body>
-
 <!-- ============================================================ -->
-<!-- パスワード認証オーバーレイ v52.177                            -->
-<!-- パスワード変更: add_password_auth.py の PASSWORD= を編集      -->
+<!-- パスワード認証オーバーレイ (v52.181) -->
 <!-- ============================================================ -->
-<div id="authOverlay" style="
-    position:fixed; inset:0; z-index:99999;
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
-    display:flex; align-items:center; justify-content:center;
-    font-family: 'Segoe UI', 'Noto Sans JP', sans-serif;
+<div id="auth-overlay" style="
+  position:fixed;inset:0;background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+  display:flex;align-items:center;justify-content:center;z-index:99999;
+  font-family:'Inter',system-ui,sans-serif;
 ">
-  <div style="
-      background:rgba(255,255,255,0.05);
-      border:1px solid rgba(255,255,255,0.15);
-      border-radius:20px;
-      padding:48px 40px;
-      width:380px;
-      max-width:90vw;
-      text-align:center;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
-      backdrop-filter: blur(12px);
-  ">
-    <!-- ロゴ -->
-    <div style="margin-bottom:8px;">
-      <span style="font-size:48px;">⚽</span>
-    </div>
-    <h1 style="
-        color:#fff; font-size:22px; font-weight:700;
-        margin:0 0 4px; letter-spacing:1px;
-    ">eS League DB Pro</h1>
-    <p style="color:#94a3b8; font-size:13px; margin:0 0 32px;">2026 / v52.177</p>
-
-    <!-- パスワード入力欄 -->
-    <div style="position:relative; margin-bottom:16px;">
-      <input
-        id="authInput"
-        type="password"
-        placeholder="アクセスキーを入力"
-        autocomplete="off"
-        style="
-            width:100%; box-sizing:border-box;
-            padding:14px 48px 14px 18px;
-            border-radius:10px;
-            border:2px solid rgba(255,255,255,0.15);
-            background:rgba(255,255,255,0.08);
-            color:#fff; font-size:15px;
-            outline:none; transition:border 0.2s;
-        "
-        onkeydown="if(event.key==='Enter') _authCheck()"
-        onfocus="this.style.borderColor='#10b981'"
-        onblur="this.style.borderColor='rgba(255,255,255,0.15)'"
-      />
-      <!-- 目のアイコン（表示/非表示切替） -->
-      <button onclick="_authToggleShow()" style="
-          position:absolute; right:14px; top:50%; transform:translateY(-50%);
-          background:none; border:none; cursor:pointer;
-          color:#94a3b8; font-size:18px; padding:0; line-height:1;
-      " title="表示/非表示">👁</button>
-    </div>
-
-    <!-- ログインボタン -->
-    <button onclick="_authCheck()" style="
-        width:100%; padding:14px;
-        background:linear-gradient(135deg, #10b981, #059669);
-        color:#fff; font-size:15px; font-weight:700;
-        border:none; border-radius:10px; cursor:pointer;
-        transition:opacity 0.2s; letter-spacing:1px;
-        margin-bottom:16px;
-    "
-    onmouseover="this.style.opacity='0.85'"
-    onmouseout="this.style.opacity='1'"
-    >🔓 ログイン</button>
-
-    <!-- エラーメッセージ -->
-    <div id="authError" style="
-        color:#f87171; font-size:13px;
-        min-height:20px; transition:opacity 0.3s;
-        opacity:0;
-    ">⚠ アクセスキーが違います</div>
-
-    <!-- セッション保持のチェックボックス -->
-    <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:8px;">
-      <input type="checkbox" id="authRemember" checked style="
-          width:16px; height:16px; accent-color:#10b981; cursor:pointer;
-      "/>
-      <label for="authRemember" style="color:#94a3b8; font-size:12px; cursor:pointer;">
-        24時間ログイン状態を保持する
-      </label>
-    </div>
+<div style="background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:48px 40px;max-width:380px;width:90%;text-align:center;">
+  <div style="font-size:3rem;margin-bottom:12px;">⚽</div>
+  <h1 style="color:#f8fafc;font-size:1.3rem;font-weight:700;margin:0 0 4px;">eS-League DB Pro</h1>
+  <p style="color:#94a3b8;font-size:0.8rem;margin:0 0 32px;">SYSTEM v52.181 Phase 4.24</p>
+  <div style="position:relative;margin-bottom:16px;">
+    <input id="auth-input" type="password" placeholder="パスワードを入力"
+      style="width:100%;box-sizing:border-box;padding:14px 48px 14px 16px;background:rgba(255,255,255,0.08);
+             border:2px solid rgba(255,255,255,0.15);border-radius:12px;color:#f8fafc;font-size:1rem;outline:none;"
+      onkeydown="if(event.key==='Enter')authCheck()"
+    />
+    <button onclick="const i=document.getElementById('auth-input');i.type=i.type==='password'?'text':'password'"
+      style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;">👁</button>
   </div>
+  <div id="auth-error" style="color:#f87171;font-size:0.78rem;min-height:20px;margin-bottom:12px;"></div>
+  <button onclick="authCheck()"
+    style="width:100%;padding:14px;background:linear-gradient(135deg,#10b981,#059669);border:none;border-radius:12px;
+           color:white;font-weight:700;font-size:1rem;cursor:pointer;">
+    🔓 ログイン
+  </button>
+  <p style="color:#475569;font-size:0.7rem;margin-top:20px;">24時間セッション保持</p>
 </div>
-
+</div>
 <script>
-(function() {
-    'use strict';
-
-    // ★ ハッシュ値（パスワード変更時はadd_password_auth.pyで再生成）★
-    const CORRECT_HASH = 'e8b2c1cd9baaf329aaa84c891a3d77aedc2b5c8fa4dd26ad47fcf7d7ef55bc54';
-    const SESSION_KEY  = 'esLeagueAuthToken';
-    const SESSION_TTL  = 24 * 60 * 60 * 1000; // 24時間(ms)
-
-    // --- SHA-256 実装 (Web Crypto API) ---
-    async function sha256(message) {
-        const msgBuffer  = new TextEncoder().encode(message);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-        const hashArray  = Array.from(new Uint8Array(hashBuffer));
-        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+(function(){
+  const HASH =  + pw_hash + r;
+  const KEY = 'es_league_auth';
+  const EXPIRE = 24 * 60 * 60 * 1000;
+  async function sha256(s){
+    const b = new TextEncoder().encode(s);
+    const h = await crypto.subtle.digest('SHA-256',b);
+    return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('');
+  }
+  function dismiss(){document.getElementById('auth-overlay').style.display='none';}
+  // セッション確認
+  try{
+    const d = JSON.parse(localStorage.getItem(KEY)||'null');
+    if(d && d.hash===HASH && Date.now()-d.ts < EXPIRE){ dismiss(); return; }
+  }catch(e){}
+  window.authCheck = async function(){
+    const v = document.getElementById('auth-input').value;
+    if(!v){ document.getElementById('auth-error').textContent='パスワードを入力してください'; return; }
+    const h = await sha256(v);
+    if(h===HASH){
+      localStorage.setItem(KEY, JSON.stringify({hash:HASH, ts:Date.now()}));
+      dismiss();
+    } else {
+      document.getElementById('auth-error').textContent='パスワードが正しくありません';
+      document.getElementById('auth-input').value='';
+      document.getElementById('auth-input').focus();
     }
-
-    // --- セッション確認 ---
-    function isSessionValid() {
-        try {
-            const item = localStorage.getItem(SESSION_KEY);
-            if (!item) return false;
-            const { hash, expiry } = JSON.parse(item);
-            return hash === CORRECT_HASH && Date.now() < expiry;
-        } catch(e) { return false; }
-    }
-
-    // --- セッション保存 ---
-    function saveSession(hash) {
-        const remember = document.getElementById('authRemember');
-        if (remember && remember.checked) {
-            localStorage.setItem(SESSION_KEY, JSON.stringify({
-                hash,
-                expiry: Date.now() + SESSION_TTL
-            }));
-        }
-    }
-
-    // --- オーバーレイ非表示 ---
-    function hideOverlay() {
-        const overlay = document.getElementById('authOverlay');
-        if (overlay) {
-            overlay.style.transition = 'opacity 0.5s';
-            overlay.style.opacity = '0';
-            setTimeout(() => overlay.remove(), 500);
-        }
-    }
-
-    // --- 起動時セッション確認 ---
-    if (isSessionValid()) {
-        // 有効なセッションあり → すぐ解除
-        document.addEventListener('DOMContentLoaded', () => {
-            hideOverlay();
-        });
-        return;
-    }
-
-    // --- パスワードチェック ---
-    window._authCheck = async function() {
-        const input = document.getElementById('authInput');
-        const errorEl = document.getElementById('authError');
-        const pw = input ? input.value : '';
-        if (!pw) return;
-
-        const hash = await sha256(pw);
-        if (hash === CORRECT_HASH) {
-            saveSession(hash);
-            hideOverlay();
-        } else {
-            errorEl.style.opacity = '1';
-            if (input) {
-                input.style.borderColor = '#f87171';
-                input.value = '';
-                input.focus();
-                setTimeout(() => {
-                    input.style.borderColor = 'rgba(255,255,255,0.15)';
-                }, 2000);
-            }
-            setTimeout(() => { errorEl.style.opacity = '0'; }, 3000);
-        }
-    };
-
-    // --- 表示/非表示切替 ---
-    window._authToggleShow = function() {
-        const input = document.getElementById('authInput');
-        if (input) {
-            input.type = input.type === 'password' ? 'text' : 'password';
-        }
-    };
-
-    // DOMContentLoaded後に入力欄にフォーカス
-    document.addEventListener('DOMContentLoaded', () => {
-        const input = document.getElementById('authInput');
-        if (input) setTimeout(() => input.focus(), 100);
-    });
-
+  };
+  setTimeout(()=>document.getElementById('auth-input').focus(), 100);
 })();
 </script>
 
@@ -2967,6 +3006,13 @@ window.closeImportModal = function() {
             playersStore.createIndex('overall', 'overall', { unique: false });
             console.log('[Phase 4.11.55] ✅ players テーブル作成完了');
         }
+        // v52.180 FIX-E: tournamentRankings ストア追加
+        if (!db.objectStoreNames.contains('tournamentRankings')) {
+            const trStore = db.createObjectStore('tournamentRankings', { keyPath: 'id' });
+            trStore.createIndex('leagueId', 'leagueId', { unique: false });
+            trStore.createIndex('date', 'date', { unique: false });
+            console.log('[v52.180] ✅ tournamentRankings ストア作成完了');
+        }
     };
             
             dbRequest.onsuccess = function(event) {
@@ -3066,6 +3112,13 @@ window.closeImportModal = function() {
                     playersStore.createIndex('team', 'team', { unique: false });
                     playersStore.createIndex('overall', 'overall', { unique: false });
                     console.log('[Phase 4.11.55] ✅ players テーブル作成完了');
+                }
+                // v52.180 FIX-E: tournamentRankings ストア追加
+                if (!db.objectStoreNames.contains('tournamentRankings')) {
+                    const trStore = db.createObjectStore('tournamentRankings', { keyPath: 'id' });
+                    trStore.createIndex('leagueId', 'leagueId', { unique: false });
+                    trStore.createIndex('date', 'date', { unique: false });
+                    console.log('[v52.180] ✅ tournamentRankings ストア作成完了');
                 }
             };
             
@@ -3453,6 +3506,13 @@ window.closeImportModal = function() {
             playersStore.createIndex('team', 'team', { unique: false });
             playersStore.createIndex('overall', 'overall', { unique: false });
             console.log('[Phase 4.11.55] ✅ players テーブル作成完了');
+        }
+        // v52.180 FIX-E: tournamentRankings ストア追加
+        if (!db.objectStoreNames.contains('tournamentRankings')) {
+            const trStore = db.createObjectStore('tournamentRankings', { keyPath: 'id' });
+            trStore.createIndex('leagueId', 'leagueId', { unique: false });
+            trStore.createIndex('date', 'date', { unique: false });
+            console.log('[v52.180] ✅ tournamentRankings ストア作成完了');
         }
     };
             
@@ -4067,7 +4127,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="flex items-center gap-3 mt-2">
                 <span class="text-gray-400 uppercase tracking-widest text-[10px]">INTEGRATED MANAGEMENT CONSOLE</span>
-                <span class="bg-emerald-600 text-white px-3 py-0.5 rounded-full text-[10px] tracking-widest uppercase">SYSTEM v52.179 Phase 4.23</span><span class="text-[9px] text-gray-300/40 tracking-wide ml-1 select-none">Produced by <a href="https://x.com/ryoryomaru99" target="_blank" rel="noopener" class="text-gray-300/40 hover:text-gray-400/60 transition-colors no-underline">@ryoryomaru99</a></span>
+                <span class="bg-emerald-600 text-white px-3 py-0.5 rounded-full text-[10px] tracking-widest uppercase">SYSTEM v52.181 Phase 4.25</span><span class="text-[9px] text-gray-300/40 tracking-wide ml-1 select-none">Produced by <a href="https://x.com/ryoryomaru99" target="_blank" rel="noopener" class="text-gray-300/40 hover:text-gray-400/60 transition-colors no-underline">@ryoryomaru99</a></span>
                 <span id="syncStatus" class="text-[10px] text-gray-400 uppercase tracking-widest flex items-center gap-1"></span>
             </div>
         </div>
@@ -4194,7 +4254,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     </div>
                                 </div>
                                 <p class="text-[10px] text-slate-400 uppercase tracking-widest mb-1">質問を入力 (例: 背番号使用ランキングは？ / 得点率が高いFWは？)</p>
-                                <textarea id="aiQueryInput" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-xs outline-none focus:border-indigo-500 mb-2 resize-none h-20" placeholder="質問を入力してください..."></textarea>
+                                <textarea id="aiQueryInput" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-xs outline-none focus:border-indigo-500 mb-2 resize-y" style="min-height:120px;height:160px;" placeholder="質問を入力してください..."></textarea>
                                 
                                 <!-- Status/Progress Area -->
                                 <div id="aiQueryProgressArea" class="hidden mb-4 bg-indigo-50 p-4 rounded-xl border border-indigo-100 shadow-inner">
@@ -4750,12 +4810,113 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="p-8 flex-1 overflow-y-auto custom-scrollbar bg-slate-50 relative">
             <div id="mgr-sec-teams" class="flex flex-col lg:flex-row gap-8 h-full fade-in">
                 <!-- (Teams manager content) -->
-                <div class="lg:w-1/3 bg-white p-6 rounded-2xl border border-slate-200 h-fit shadow-sm"><h4 class="text-indigo-800 font-bold mb-4 border-b pb-2">🆕 新規チーム追加</h4><div class="space-y-4"><div><label class="text-[10px] text-slate-400 uppercase">チーム名</label><input type="text" id="newTeamName" class="input-box py-2" placeholder="例: FC Tokyo"></div><div><label class="text-[10px] text-slate-400 uppercase">チームID (固有数字)</label><input type="text" id="newTeamId" class="input-box py-2" placeholder="例: 999"></div><div><label class="text-[10px] text-slate-400 uppercase">メインカテゴリ (L1)</label><select id="newTeamL1" class="input-box py-2"></select></div><div><label class="text-[10px] text-slate-400 uppercase mb-1 block">サブカテゴリ (L2)</label><div class="l2-check-container custom-scrollbar" id="newTeamL2Checkboxes"></div></div><button onclick="window.saveNewTeam()" class="w-full bg-emerald-600 text-white py-3 rounded-xl text-xs uppercase shadow-md active:scale-95 transition-all">＋ 追加する</button></div></div>
+                <div class="lg:w-1/3 bg-white p-6 rounded-2xl border border-slate-200 h-fit shadow-sm">
+<h4 class="text-indigo-800 font-bold mb-4 border-b pb-2">🆕 新規チーム追加</h4>
+<div class="space-y-4">
+  <div>
+    <label class="text-[10px] text-slate-400 uppercase">チーム名 <span class="text-red-400">*</span></label>
+    <input type="text" id="newTeamName" class="input-box py-2" placeholder="例: FC Tokyo">
+  </div>
+  <div>
+    <label class="text-[10px] text-slate-400 uppercase">チームID (固有数字) <span class="text-red-400">*</span></label>
+    <input type="text" id="newTeamId" class="input-box py-2" placeholder="例: 999">
+  </div>
+  <div>
+    <label class="text-[10px] text-slate-400 uppercase block mb-1">メインカテゴリ (L1) <span class="text-red-400">*</span></label>
+    <div class="flex gap-2 items-center">
+      <select id="newTeamL1" class="input-box py-2 flex-1"></select>
+      <button onclick="window.toggleQuickLeagueForm()" title="新規リーグをその場で追加"
+        class="shrink-0 bg-indigo-50 border border-indigo-200 text-indigo-600 px-3 py-2 rounded-lg text-xs font-bold hover:bg-indigo-100 transition">＋</button>
+    </div>
+    <!-- Quick inline league add form -->
+    <div id="quickLeagueForm" class="hidden mt-3 p-3 bg-indigo-50 border border-indigo-200 rounded-xl space-y-2">
+      <p class="text-[9px] font-bold text-indigo-700 uppercase">新規リーグをその場で追加</p>
+      <div class="flex gap-1">
+        <input type="text" id="quickLeagueId" class="input-box py-1.5 text-xs font-mono w-20" placeholder="ID例:0500">
+        <input type="text" id="quickLeagueYear" class="input-box py-1.5 text-xs league-year-input w-14 text-center" placeholder="年度" maxlength="6">
+        <input type="text" id="quickLeagueSeason" class="input-box py-1.5 text-xs font-bold w-16 text-center" placeholder="17th">
+      </div>
+      <div class="flex gap-1">
+        <input type="text" id="quickLeagueCategory" class="input-box py-1.5 text-xs flex-1" placeholder="eS-League" list="leagueCategoryList">
+        <select id="quickLeagueDiv" class="input-box py-1.5 text-xs w-20">
+          <option value="">DIV</option>
+          <option value="01部">01部</option>
+          <option value="02部">02部</option>
+          <option value="03部">03部</option>
+          <option value="04部">04部</option>
+          <option value="05部">05部</option>
+          <option value="OP">OP</option>
+        </select>
+        <input type="text" id="quickLeagueDivCustom" class="input-box py-1.5 text-xs w-20" placeholder="カスタム">
+      </div>
+      <button onclick="window.saveQuickLeague()"
+        class="w-full bg-indigo-600 text-white py-2 rounded-lg text-xs font-bold">✓ リーグを追加してL1に設定</button>
+    </div>
+    <div id="newTeamL1Warning" class="text-amber-600 text-[10px] mt-1 hidden">⚠ メインカテゴリを設定してください</div>
+  </div>
+  <div>
+    <label class="text-[10px] text-slate-400 uppercase mb-1 block">サブカテゴリ (L2)</label>
+    <div class="l2-check-container custom-scrollbar" id="newTeamL2Checkboxes"></div>
+  </div>
+  <button onclick="window.saveNewTeam()" class="w-full bg-emerald-600 text-white py-3 rounded-xl text-xs uppercase shadow-md active:scale-95 transition-all">＋ 追加する</button>
+</div>
+</div>
                 <div class="lg:w-2/3 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col h-full min-h-[500px]"><h4 class="text-slate-800 font-bold mb-4 border-b pb-2 flex justify-between items-center"><div class="flex items-center gap-2"><input type="checkbox" onchange="window.toggleAllTeams(this.checked)" class="w-4 h-4 cursor-pointer text-indigo-600"><span>📋 登録済みチーム一覧</span></div><span class="text-[10px] text-slate-400">※IDは紐付けのため変更不可</span></h4><div class="mb-4 p-4 bg-indigo-50 rounded-xl border border-indigo-100 shadow-sm text-slate-800 shrink-0"><h5 class="text-[11px] text-indigo-800 font-bold mb-3 flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> 選択したチームに一括設定</h5><div class="flex flex-wrap gap-4 items-end"><div class="flex-1 min-w-[140px]"><label class="text-[9px] text-slate-500 block mb-1">メイン(L1)変更</label><select id="batchL1" class="w-full bg-white border border-slate-200 rounded p-2 text-xs outline-none cursor-pointer"></select></div><div class="flex-1 min-w-[140px]"><label class="text-[9px] text-slate-500 block mb-1">サブ(L2)追加</label><select id="batchL2Add" class="w-full bg-white border border-slate-200 rounded p-2 text-xs outline-none cursor-pointer"></select></div><div class="flex-1 min-w-[140px]"><label class="text-[9px] text-slate-500 block mb-1">サブ(L2)削除</label><select id="batchL2Remove" class="w-full bg-white border border-slate-200 rounded p-2 text-xs outline-none cursor-pointer"></select></div><button onclick="window.applyBatchTeamUpdate()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg text-[11px] font-bold hover:bg-indigo-700 active:scale-95 transition-transform shadow-md">一括適用</button></div></div><div id="teamManagerList" class="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-2"></div></div>
             </div>
             <div id="mgr-sec-leagues" class="hidden flex flex-col lg:flex-row gap-8 h-full fade-in">
                 <!-- (Leagues manager content) -->
-                <div class="lg:w-1/3 bg-white p-6 rounded-2xl border border-slate-200 h-fit shadow-sm"><h4 class="text-indigo-800 font-bold mb-4 border-b pb-2">🆕 新規リーグ追加</h4><div class="space-y-4"><div><label class="text-[10px] text-slate-400 uppercase">リーグID (固有数字など)</label><input type="text" id="newLeagueId" class="input-box py-2" placeholder="例: 0500"></div><div><label class="text-[10px] text-slate-400 uppercase">リーグ名称</label><input type="text" id="newLeagueName" class="input-box py-2" placeholder="例: 18th 1部"></div><button onclick="window.saveNewLeague()" class="w-full bg-emerald-600 text-white py-3 rounded-xl text-xs uppercase shadow-md active:scale-95 transition-all">＋ 追加する</button></div></div>
+                <div class="lg:w-1/3 bg-white p-6 rounded-2xl border border-slate-200 h-fit shadow-sm">
+<h4 class="text-indigo-800 font-bold mb-4 border-b pb-2">🆕 新規リーグ追加</h4>
+<div class="space-y-3">
+  <div>
+    <label class="text-[10px] text-slate-400 uppercase block mb-1">リーグID <span class="text-red-400">*</span></label>
+    <input type="text" id="newLeagueId" class="input-box py-2 font-mono" placeholder="例: 0500" oninput="window.updateLeaguePreview()">
+  </div>
+  <div class="league-form-grid">
+    <div>
+      <label class="text-[9px] text-indigo-500 font-bold uppercase block mb-1">年度 <span class="text-red-400">*</span></label>
+      <input type="text" id="newLeagueYear" class="input-box py-2 text-center league-year-input" placeholder="26" maxlength="6" oninput="window.updateLeaguePreview()">
+    </div>
+    <div>
+      <label class="text-[9px] text-slate-400 uppercase block mb-1">シーズン <span class="text-red-400">*</span></label>
+      <input type="text" id="newLeagueSeason" class="input-box py-2 text-center font-bold" placeholder="17th" oninput="window.updateLeaguePreview()">
+    </div>
+    <div>
+      <label class="text-[9px] text-slate-400 uppercase block mb-1">リーグカテゴリ <span class="text-red-400">*</span></label>
+      <input type="text" id="newLeagueCategory" class="input-box py-2" placeholder="eS-League" list="leagueCategoryList" oninput="window.updateLeaguePreview()">
+      <datalist id="leagueCategoryList">
+        <option value="eS-League">
+        <option value="GrowthLeague">
+        <option value="Judith CUP">
+      </datalist>
+    </div>
+    <div>
+      <label class="text-[9px] text-slate-400 uppercase block mb-1">DIV <span class="text-red-400">*</span></label>
+      <select id="newLeagueDiv" class="input-box py-2 text-center" onchange="window.updateLeaguePreview()">
+        <option value="">選択</option>
+        <option value="01部">01部</option>
+        <option value="02部">02部</option>
+        <option value="03部">03部</option>
+        <option value="04部">04部</option>
+        <option value="05部">05部</option>
+        <option value="OP">OP</option>
+      </select>
+    </div>
+  </div>
+  <div>
+    <label class="text-[9px] text-slate-400 uppercase block mb-1">DIV カスタム入力 (上記に該当なし)</label>
+    <input type="text" id="newLeagueDivCustom" class="input-box py-1.5 text-xs" placeholder="例: 02部B、カップ戦 など" oninput="window.updateLeaguePreview()">
+  </div>
+  <div>
+    <label class="text-[9px] text-slate-500 uppercase block mb-1">プレビュー</label>
+    <div class="league-form-preview" id="newLeaguePreview">
+      <span class="text-slate-400 text-xs">各項目を入力するとプレビューが表示されます</span>
+    </div>
+  </div>
+  <div id="newLeagueWarning" class="text-amber-600 text-[10px] hidden"></div>
+  <button onclick="window.saveNewLeague()" class="w-full bg-emerald-600 text-white py-3 rounded-xl text-xs uppercase shadow-md active:scale-95 transition-all">＋ 追加する</button>
+</div>
+</div>
                 <div class="lg:w-2/3 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col h-full min-h-[400px]"><h4 class="text-slate-800 font-bold mb-4 border-b pb-2 flex justify-between items-center"><span>📋 登録済みリーグ一覧</span></h4><div id="leagueManagerList" class="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-2"></div></div>
             </div>
         </div>
@@ -5481,7 +5642,125 @@ function processFile(f) { const r = new FileReader(); r.onload = e => { manualIm
 function renderThumbs() { const c = document.getElementById('thumbContainer'); if(!c) return; c.innerHTML = manualImages.map(i => `<div class="thumb-item" onclick="event.stopPropagation()"><img src="${i.src}" class="w-full h-full object-cover"><div class="thumb-remove" onclick="window.removeManualImage('${i.id}')">×</div></div>`).join(''); }
 function processCardFile(f) { const r = new FileReader(); r.onload = e => { cardImages.push({ id: crypto.randomUUID(), data: e.target.result.split(',')[1], src: e.target.result }); renderCardThumbs(); }; r.readAsDataURL(f); }
 function renderCardThumbs() { const c = document.getElementById('cardThumbContainer'); if(!c) return; c.innerHTML = cardImages.map(i => `<div class="thumb-item" onclick="event.stopPropagation()"><img src="${i.src}" class="w-full h-full object-cover"><div class="thumb-remove" onclick="window.removeCardImage('${i.id}')">×</div></div>`).join(''); }
-function renderChart() { const cvs = document.getElementById('performanceChart'); if(!cvs || !selectedPlayerForChart) return; if (chartMetric === 'ai') return; const ctx = cvs.getContext('2d'); const p = playerMaster.find(x => x.name === selectedPlayerForChart); const h = (p.history||[]).filter(x => x.dataType === 'latest'); if(chartInstance) chartInstance.destroy(); chartInstance = new Chart(ctx, { type:'line', data: { labels: h.map(x => x.date), datasets: [{ label: chartMetric, data: h.map(x => x[chartMetric]||0), borderColor: '#10b981', tension: 0.4 }] }, options: { responsive:true, maintainAspectRatio:false } }); }
+// ═══════════════════════════════════════════════════════════
+// FIX-B (v52.180): 金曜08:00前の最新データ選択ロジック
+// ─ 毎週金曜 08:00 を基準として、その時刻より前のデータを使用
+// ─ 08:00以降のデータは翌週の基準点として扱わない
+// ═══════════════════════════════════════════════════════════
+function getFridayWeeklyHistory(historyArr) {
+  // 1. 全 'latest' データをdateで昇順ソート
+  const allLatest = (historyArr || [])
+    .filter(x => x.dataType === 'latest' && x.date)
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (allLatest.length === 0) return [];
+
+  // 2. 各エントリのdateから「その週の金曜08:00」を計算
+  //    金曜 = 5 (0=日, 1=月, ... 5=金, 6=土)
+  //    基準: データのdateが含まれる週(月-日)の金曜08:00
+  function getWeeklyFridayKey(dateStr) {
+    const d = new Date(dateStr);
+    // 日曜起点 → 月曜起点に調整
+    const day = d.getDay(); // 0=Sun...6=Sat
+    // その週の金曜を算出 (day=5→+0, day=6→+6, day=0→+5, day=1→+4...)
+    const daysToFriday = (5 - day + 7) % 7;
+    const fri = new Date(d);
+    fri.setDate(d.getDate() + daysToFriday);
+    fri.setHours(8, 0, 0, 0);
+    return fri.getTime();
+  }
+
+  // 3. 各エントリを「対応する金曜08:00の週キー」でグループ化
+  //    ルール: エントリのdateが金曜08:00 **より前** なら当週、以降なら翌週へ
+  const weekBuckets = {};
+  for (const entry of allLatest) {
+    const d = new Date(entry.date);
+    const fridayTs = getWeeklyFridayKey(entry.date);
+    let weekKey;
+    if (d.getTime() < fridayTs) {
+      // 金曜08:00より前 → 当週バケット
+      weekKey = fridayTs;
+    } else {
+      // 金曜08:00以降 → 翌週バケット (7日後の金曜)
+      weekKey = fridayTs + 7 * 24 * 60 * 60 * 1000;
+    }
+    if (!weekBuckets[weekKey]) weekBuckets[weekKey] = [];
+    weekBuckets[weekKey].push(entry);
+  }
+
+  // 4. 各バケットから「金曜08:00直前の最新エントリ」を1件選択
+  const sortedKeys = Object.keys(weekBuckets).map(Number).sort((a, b) => a - b);
+  const result = [];
+  for (const wk of sortedKeys) {
+    const bucket = weekBuckets[wk];
+    const fridayTs = wk;
+    // 金曜08:00より前のデータから最も遅い (=直前の) ものを選択
+    const candidates = bucket.filter(x => new Date(x.date).getTime() < fridayTs);
+    if (candidates.length > 0) {
+      const best = candidates.reduce((a, b) =>
+        new Date(a.date).getTime() > new Date(b.date).getTime() ? a : b
+      );
+      const fridayDate = new Date(fridayTs);
+      result.push({
+        ...best,
+        _weekLabel: fridayDate.toLocaleDateString('ja-JP', { month:'2-digit', day:'2-digit' }) + '(金)'
+      });
+    }
+  }
+  return result;
+}
+
+function renderChart() {
+  const cvs = document.getElementById('performanceChart');
+  if(!cvs || !selectedPlayerForChart) return;
+  if (chartMetric === 'ai') return;
+  const ctx = cvs.getContext('2d');
+  const p = playerMaster.find(x => x.name === selectedPlayerForChart);
+
+  // 金曜08:00前の週次データを取得
+  const weeklyData = getFridayWeeklyHistory(p.history || []);
+  // フォールバック: 週次データがなければ全 latest データを使用
+  const h = weeklyData.length > 0
+    ? weeklyData
+    : (p.history||[]).filter(x => x.dataType === 'latest');
+
+  const labels = h.map(x => x._weekLabel || x.date);
+  const values = h.map(x => x[chartMetric] || 0);
+
+  if(chartInstance) chartInstance.destroy();
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: chartMetric,
+        data: values,
+        borderColor: '#10b981',
+        backgroundColor: 'rgba(16,185,129,0.08)',
+        tension: 0.4,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            title: (items) => {
+              const idx = items[0].dataIndex;
+              const entry = h[idx];
+              return entry._weekLabel
+                ? `週次 ${entry._weekLabel}\n(${entry.date})`
+                : entry.date;
+            }
+          }
+        }
+      }
+    }
+  });
+}
 
 
 // キューカード詳細表示トグル (Phase 4.11.55)
@@ -6473,7 +6752,7 @@ async function saveToCloud() {
         dbSnapshots.push(snapData);
         if (dbSnapshots.length > 50) dbSnapshots.shift(); // Keep max 50 snapshots
     }
-    try { await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'masterData'), { playerMaster: JSON.stringify(playerMaster), teamMaster: JSON.stringify(teamMaster), customLabels: JSON.stringify(customLabels), columnVisibility: JSON.stringify(columnVisibility), leagueLabelMap: JSON.stringify(leagueLabelMap), geminiKey: window.getApiKey() }, { merge: true }); setSyncStatus('synced'); } catch(e) { setSyncStatus('error'); } }
+    try { await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'masterData'), { playerMaster: JSON.stringify(playerMaster), teamMaster: JSON.stringify(teamMaster), customLabels: JSON.stringify(customLabels), columnVisibility: JSON.stringify(columnVisibility), leagueLabelMap: JSON.stringify(leagueLabelMap), leagueMeta: JSON.stringify(leagueMeta), geminiKey: window.getApiKey() }, { merge: true }); setSyncStatus('synced'); } catch(e) { setSyncStatus('error'); } }
 async function loadFromCloud(uid) { 
     const s = await getDoc(doc(db, 'artifacts', appId, 'users', uid, 'data', 'masterData')); 
     if(s.exists()) { 
@@ -6481,6 +6760,7 @@ async function loadFromCloud(uid) {
         playerMaster = d.playerMaster ? JSON.parse(d.playerMaster) : []; 
         if (d.teamMaster) { teamMaster = JSON.parse(d.teamMaster).map(t => ({ ...t, l2: Array.isArray(t.l2) ? t.l2 : (t.l2 ? [t.l2] : []) })); }
         leagueLabelMap = d.leagueLabelMap ? JSON.parse(d.leagueLabelMap) : { ...defaultLeagueLabelMap };
+        if (d.leagueMeta) { try { leagueMeta = JSON.parse(d.leagueMeta); window.leagueMeta = leagueMeta; } catch(e) {} }
         if (d.customLabels) {
             const loaded = JSON.parse(d.customLabels);
             if (Array.isArray(loaded) && typeof loaded[0] === 'string') { customLabels = loaded.map(l => ({ name: l, type: 'general' })); } else { customLabels = loaded; }
@@ -6809,7 +7089,144 @@ async function executeFinalSave() {
 
 // Define Manager Functions before Object.assign
 function renderTeamManagerList() { const listContainer = document.getElementById('teamManagerList'); const sortedTeams = [...teamMaster].sort((a,b) => a.name.localeCompare(b.name, 'ja')); listContainer.innerHTML = sortedTeams.map((t) => { const l1Opt = Object.entries(leagueLabelMap).filter(([id])=>id).map(([id,name]) => `<option value="${id}" ${t.l1 === id ? 'selected' : ''}>${name}</option>`).join(''); const l2Checkboxes = Object.entries(leagueLabelMap).filter(([id])=>id).map(([id,name]) => `<label class="flex items-center gap-1 text-[9px] w-full hover:bg-slate-100 p-1 rounded cursor-pointer transition-colors"><input type="checkbox" value="${id}" ${Array.isArray(t.l2) && t.l2.includes(id)?'checked':''} class="edit-team-l2-check-${t.id} w-3 h-3 text-emerald-600 focus:ring-emerald-500 rounded border-slate-300"> <span>${name}</span></label>` ).join(''); return ` <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200"> <div class="w-16 shrink-0 text-center flex flex-col items-center"> <input type="checkbox" class="team-batch-check w-4 h-4 text-indigo-600 rounded border-slate-300 cursor-pointer" value="${t.id}"> <span class="text-[9px] text-slate-400 block mt-2 mb-1">ID</span> <span class="font-mono text-xs font-bold text-slate-700">${t.id}</span> </div> <div class="flex-1"> <input type="text" id="editTeamName_${t.id}" value="${t.name}" class="w-full bg-white border border-slate-200 rounded px-2 py-1.5 text-xs outline-none focus:border-indigo-400 mb-2" placeholder="チーム名"> <div class="grid grid-cols-2 gap-3"> <div> <span class="text-[9px] text-slate-500 mb-1 block">メイン (L1)</span> <select id="editTeamL1_${t.id}" class="w-full bg-white border border-slate-200 rounded px-1 py-1.5 text-[10px] outline-none cursor-pointer">${l1Opt}</select> </div> <div> <span class="text-[9px] text-slate-500 mb-1 block">サブ (L2/複数可)</span> <div class="l2-check-container custom-scrollbar"> ${l2Checkboxes} </div> </div> </div> </div> <div class="flex flex-col gap-2 shrink-0"> <button onclick="window.updateTeam('${t.id}')" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-[10px] hover:bg-indigo-700 active:scale-95 transition-transform shadow-md font-bold">更新</button> <button onclick="window.deleteTeam('${t.id}')" class="bg-red-50 text-red-500 border border-red-200 px-4 py-2 rounded-lg text-[10px] hover:bg-red-100 active:scale-95 transition-transform font-bold">削除</button> </div> </div>`; }).join(''); }
-function renderLeagueManagerList() { const listContainer = document.getElementById('leagueManagerList'); const sortedLeagues = Object.entries(leagueLabelMap).filter(([id])=>id!=="").sort(([idA], [idB]) => idA.localeCompare(idB)); listContainer.innerHTML = sortedLeagues.map(([id, name]) => ` <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200"> <div class="w-16 shrink-0 text-center flex flex-col items-center"> <span class="text-[9px] text-slate-400 block mb-1">ID</span> <input type="text" id="editLeagueId_${id}" value="${id}" class="w-full text-center bg-white border border-slate-200 rounded px-1 py-1 text-xs outline-none focus:border-indigo-400 font-mono font-bold"> </div> <div class="flex-1"> <span class="text-[9px] text-slate-500 block mb-1">リーグ名称</span> <input type="text" id="editLeagueName_${id}" value="${name}" class="w-full bg-white border border-slate-200 rounded px-2 py-1.5 text-xs outline-none focus:border-indigo-400"> </div> <div class="flex flex-col gap-2 shrink-0 mt-3"> <button onclick="window.updateLeague('${id}')" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-[10px] hover:bg-indigo-700 active:scale-95 transition-transform shadow-md font-bold">更新</button> <button onclick="window.deleteLeague('${id}')" class="bg-red-50 text-red-500 border border-red-200 px-4 py-2 rounded-lg text-[10px] hover:bg-red-100 active:scale-95 transition-transform font-bold">削除</button> </div> </div> `).join(''); }
+// ─────────────────────────────────────────────────────────────────
+// v52.181: リーグ構造化フォーム ヘルパー
+// ─────────────────────────────────────────────────────────────────
+window.buildLeagueLabel = function(meta) {
+  if (!meta) return '';
+  const parts = [meta.year, meta.season, meta.category, meta.div].filter(Boolean);
+  return parts.join(' ');
+};
+
+window.updateLeaguePreview = function() {
+  const year   = document.getElementById('newLeagueYear')?.value.trim()    || '';
+  const season = document.getElementById('newLeagueSeason')?.value.trim()  || '';
+  const cat    = document.getElementById('newLeagueCategory')?.value.trim()|| '';
+  const divSel = document.getElementById('newLeagueDiv')?.value             || '';
+  const divCst = document.getElementById('newLeagueDivCustom')?.value.trim()|| '';
+  const div    = divCst || divSel;
+  const prev   = document.getElementById('newLeaguePreview');
+  if (!prev) return;
+  if (!year && !season && !cat && !div) {
+    prev.innerHTML = '<span class="text-slate-400 text-xs">各項目を入力するとプレビューが表示されます</span>';
+    return;
+  }
+  const isOp = div === 'OP';
+  prev.innerHTML = [
+    year   ? `<span class="league-year-badge">${year}</span>`                        : '<span class="text-slate-300 text-xs">年度?</span>',
+    season ? `<span class="league-season-badge">${season}</span>`                    : '',
+    cat    ? `<span class="league-cat-badge">${cat}</span>`                          : '',
+    div    ? `<span class="league-div-badge${isOp?' op':''}">${div}</span>`          : ''
+  ].filter(Boolean).join('');
+};
+
+window.toggleQuickLeagueForm = function() {
+  const f = document.getElementById('quickLeagueForm');
+  if (f) f.classList.toggle('hidden');
+};
+
+window.saveQuickLeague = async function() {
+  let id      = document.getElementById('quickLeagueId')?.value.trim()       || '';
+  id          = window.toHalfWidthNumbers(id);
+  const year  = document.getElementById('quickLeagueYear')?.value.trim()     || '';
+  const season= document.getElementById('quickLeagueSeason')?.value.trim()   || '';
+  const cat   = document.getElementById('quickLeagueCategory')?.value.trim() || '';
+  const divSel= document.getElementById('quickLeagueDiv')?.value              || '';
+  const divCst= document.getElementById('quickLeagueDivCustom')?.value.trim() || '';
+  const div   = divCst || divSel;
+  if (!id || !year || !season || !cat || !div) {
+    showMessage('⚠ すべての項目を入力してください (ID・年度・シーズン・カテゴリ・DIV)', 'warning');
+    return;
+  }
+  if (leagueLabelMap[id] !== undefined) {
+    showMessage('このリーグIDは既に存在します', 'error'); return;
+  }
+  const meta = { year, season, category: cat, div };
+  leagueMeta[id] = meta;
+  leagueLabelMap[id] = window.buildLeagueLabel(meta);
+  await saveToCloud();
+  updateUIForLeagueChange();
+  // 追加したリーグをL1セレクトに反映して選択状態にする
+  const l1Sel = document.getElementById('newTeamL1');
+  if (l1Sel) l1Sel.value = id;
+  // quickフォームをリセット&閉じる
+  ['quickLeagueId','quickLeagueYear','quickLeagueSeason','quickLeagueCategory','quickLeagueDivCustom'].forEach(elId => {
+    const el = document.getElementById(elId); if(el) el.value = '';
+  });
+  const qDiv = document.getElementById('quickLeagueDiv'); if(qDiv) qDiv.value = '';
+  const qForm = document.getElementById('quickLeagueForm'); if(qForm) qForm.classList.add('hidden');
+  showMessage(`リーグ「${window.buildLeagueLabel(meta)}」を追加してL1に設定しました`, 'success');
+};
+
+function renderLeagueManagerList() {
+  const listContainer = document.getElementById('leagueManagerList');
+  const sortedLeagues = Object.entries(leagueLabelMap).filter(([id])=>id!=="").sort(([a],[b])=>a.localeCompare(b));
+  const DIV_OPTIONS = ['01部','02部','03部','04部','05部','OP'].map(v=>`<option value="${v}">${v}</option>`).join('');
+  listContainer.innerHTML = sortedLeagues.map(([id, name]) => {
+    const m = leagueMeta[id] || {};
+    const yearVal    = m.year     || '';
+    const seasonVal  = m.season   || '';
+    const catVal     = m.category || '';
+    const divVal     = m.div      || '';
+    const isPreset   = ['01部','02部','03部','04部','05部','OP'].includes(divVal);
+    const divSel     = ['01部','02部','03部','04部','05部','OP'].map(v=>`<option value="${v}"${v===divVal?' selected':''}>${v}</option>`).join('');
+    return `
+    <div class="bg-white border-2 border-slate-100 rounded-2xl p-4 mb-3 hover:border-indigo-200 transition">
+      <div class="flex items-center justify-between mb-3">
+        <div class="league-label-display">
+          <span class="league-year-badge">${yearVal||'??'}</span>
+          <span class="league-season-badge">${seasonVal||'?th'}</span>
+          <span class="league-cat-badge">${catVal||'カテゴリ未設定'}</span>
+          <span class="league-div-badge${(divVal==='OP')?' op':''}">${divVal||'DIV未設定'}</span>
+        </div>
+        <span class="text-[9px] font-mono text-slate-400 bg-slate-100 px-2 py-1 rounded">ID: ${id}</span>
+      </div>
+      <div class="grid gap-2" style="grid-template-columns:60px 70px 1fr 80px">
+        <div>
+          <label class="text-[8px] text-indigo-500 font-bold uppercase block mb-1">年度</label>
+          <input type="text" id="editLeagueYear_${id}" value="${yearVal}"
+            class="w-full bg-slate-50 border border-slate-200 rounded px-1 py-1.5 text-xs outline-none focus:border-indigo-400 league-year-input text-center" maxlength="6">
+        </div>
+        <div>
+          <label class="text-[8px] text-slate-400 uppercase block mb-1">シーズン</label>
+          <input type="text" id="editLeagueSeason_${id}" value="${seasonVal}"
+            class="w-full bg-slate-50 border border-slate-200 rounded px-1 py-1.5 text-xs outline-none focus:border-indigo-400 font-bold text-center">
+        </div>
+        <div>
+          <label class="text-[8px] text-slate-400 uppercase block mb-1">リーグカテゴリ</label>
+          <input type="text" id="editLeagueCategory_${id}" value="${catVal}"
+            class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1.5 text-xs outline-none focus:border-indigo-400"
+            list="leagueCategoryList">
+        </div>
+        <div>
+          <label class="text-[8px] text-slate-400 uppercase block mb-1">DIV</label>
+          <select id="editLeagueDiv_${id}"
+            class="w-full bg-slate-50 border border-slate-200 rounded px-1 py-1.5 text-xs outline-none focus:border-indigo-400 text-center"
+            onchange="document.getElementById('editLeagueDivCustom_${id}').value=''">
+            <option value="">選択</option>${divSel}
+          </select>
+        </div>
+      </div>
+      <div class="mt-2">
+        <label class="text-[8px] text-slate-400 uppercase block mb-1">DIV カスタム (任意)</label>
+        <input type="text" id="editLeagueDivCustom_${id}" value="${isPreset?'':divVal}"
+          class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1.5 text-xs outline-none focus:border-indigo-400"
+          placeholder="例: 02部B、カップ戦 など">
+      </div>
+      <div class="mt-2">
+        <label class="text-[8px] text-slate-400 uppercase block mb-1">ID変更 (慎重に)</label>
+        <input type="text" id="editLeagueId_${id}" value="${id}"
+          class="w-full bg-slate-50 border border-slate-200 rounded px-1 py-1.5 text-xs outline-none focus:border-red-400 font-mono font-bold text-center">
+      </div>
+      <div class="flex gap-2 mt-3">
+        <button onclick="window.updateLeague('${id}')"
+          class="flex-1 bg-indigo-600 text-white py-2 rounded-lg text-[10px] hover:bg-indigo-700 active:scale-95 transition-transform font-bold">✏️ 更新</button>
+        <button onclick="window.deleteLeague('${id}')"
+          class="bg-red-50 text-red-500 border border-red-200 px-4 py-2 rounded-lg text-[10px] hover:bg-red-100 active:scale-95 transition-transform font-bold">🗑 削除</button>
+      </div>
+    </div>`;
+  }).join('');
+}
 function openTeamManager() { window.switchManagerTab('teams'); document.getElementById('teamManagerModal').classList.replace('hidden', 'flex'); }
 function closeTeamManager() { document.getElementById('teamManagerModal').classList.replace('flex', 'hidden'); }
 
@@ -7564,9 +7981,16 @@ Object.assign(window, {
         const l2 = Array.from(l2Checks).map(c => c.value);
         if (!id || !name) return showMessage("IDとチーム名は必須です", "error");
         if (teamMaster.find(t => t.id === id)) return showMessage("このIDは既に存在します", "error");
+        // L1 未設定時の警告 (保存は可能)
+        if (!l1) {
+            const warnEl = document.getElementById('newTeamL1Warning');
+            if (warnEl) { warnEl.classList.remove('hidden'); }
+            showMessage("⚠ メインカテゴリ(L1)が未設定です。後で設定できます。", "warning");
+        }
         teamMaster.push({ id, name, l1, l2 });
         await saveToCloud(); window.renderTeamManagerList(); updateUIForLeagueChange(); showMessage("チームを追加しました", "success");
         document.getElementById('newTeamId').value = ""; document.getElementById('newTeamName').value = "";
+        const warnEl = document.getElementById('newTeamL1Warning'); if(warnEl) warnEl.classList.add('hidden');
     },
     updateTeam: async (id) => {
         const t = teamMaster.find(x => x.id === id); if(!t) return;
@@ -7586,38 +8010,77 @@ Object.assign(window, {
     },
 
     // League CRUD
-    saveNewLeague: async () => { 
-        let id = document.getElementById('newLeagueId').value.trim(); 
-        id = window.toHalfWidthNumbers(id); 
-        const name = document.getElementById('newLeagueName').value.trim(); 
-        if (!id || !name) return showMessage("必須項目が入力されていません", "error"); 
-        if (leagueLabelMap[id] !== undefined) return showMessage("このリーグIDは既に存在します", "error"); 
-        leagueLabelMap[id] = name; 
-        document.getElementById('newLeagueId').value = ''; 
-        document.getElementById('newLeagueName').value = ''; 
-        await saveToCloud(); 
-        window.renderLeagueManagerList(); 
-        updateUIForLeagueChange(); 
-        showMessage("リーグを追加しました", "success"); 
+    saveNewLeague: async () => {
+        let id = document.getElementById('newLeagueId').value.trim();
+        id = window.toHalfWidthNumbers(id);
+        const year    = document.getElementById('newLeagueYear').value.trim();
+        const season  = document.getElementById('newLeagueSeason').value.trim();
+        const cat     = document.getElementById('newLeagueCategory').value.trim();
+        const divSel  = document.getElementById('newLeagueDiv').value;
+        const divCust = document.getElementById('newLeagueDivCustom').value.trim();
+        const div     = divCust || divSel;
+        const missing = [];
+        if (!id)     missing.push('リーグID');
+        if (!year)   missing.push('年度');
+        if (!season) missing.push('シーズン');
+        if (!cat)    missing.push('リーグカテゴリ');
+        if (!div)    missing.push('DIVカテゴリ');
+        if (missing.length > 0) {
+            const warnEl = document.getElementById('newLeagueWarning');
+            if (warnEl) { warnEl.textContent = `⚠ 未入力: ${missing.join(' / ')}`; warnEl.classList.remove('hidden'); }
+            showMessage(`未入力項目があります: ${missing.join(', ')}`, "warning");
+        }
+        if (!id) return;
+        if (leagueLabelMap[id] !== undefined) return showMessage("このリーグIDは既に存在します", "error");
+        const meta = { year, season, category: cat, div };
+        leagueMeta[id] = meta;
+        leagueLabelMap[id] = window.buildLeagueLabel(meta);
+        ['newLeagueId','newLeagueYear','newLeagueSeason','newLeagueCategory','newLeagueDivCustom'].forEach(elId => {
+            const el = document.getElementById(elId); if(el) el.value = '';
+        });
+        const divEl = document.getElementById('newLeagueDiv'); if(divEl) divEl.value = '';
+        const warnEl = document.getElementById('newLeagueWarning'); if(warnEl) warnEl.classList.add('hidden');
+        const prevEl = document.getElementById('newLeaguePreview');
+        if(prevEl) prevEl.innerHTML = '<span class="text-slate-400 text-xs">各項目を入力するとプレビューが表示されます</span>';
+        await saveToCloud();
+        window.renderLeagueManagerList();
+        updateUIForLeagueChange();
+        showMessage("リーグを追加しました", "success");
     },
-    updateLeague: async (oldId) => { 
-        const name = document.getElementById(`editLeagueName_${oldId}`).value.trim(); 
-        let newId = document.getElementById(`editLeagueId_${oldId}`).value.trim(); 
-        newId = window.toHalfWidthNumbers(newId); 
-        if (!name || !newId) return showMessage("IDと名称は必須です", "error"); 
-        if (newId !== oldId && leagueLabelMap[newId] !== undefined) { return showMessage("変更後のIDは既に存在します", "error"); } 
-        if (newId !== oldId) { 
-            teamMaster.forEach(t => { 
-                if (t.l1 === oldId) t.l1 = newId; 
-                if (t.l2 && t.l2.includes(oldId)) { t.l2 = t.l2.map(l => l === oldId ? newId : l); } 
-            }); 
-            leagueLabelMap[newId] = name; 
-            delete leagueLabelMap[oldId]; 
-        } else { leagueLabelMap[oldId] = name; } 
-        await saveToCloud(); 
-        window.renderLeagueManagerList(); 
-        updateUIForLeagueChange(); 
-        showMessage("リーグ情報を更新しました", "success"); 
+    updateLeague: async (oldId) => {
+        let newId = document.getElementById(`editLeagueId_${oldId}`).value.trim();
+        newId = window.toHalfWidthNumbers(newId);
+        const year    = document.getElementById(`editLeagueYear_${oldId}`)?.value.trim()    || '';
+        const season  = document.getElementById(`editLeagueSeason_${oldId}`)?.value.trim()  || '';
+        const cat     = document.getElementById(`editLeagueCategory_${oldId}`)?.value.trim()|| '';
+        const divSel  = document.getElementById(`editLeagueDiv_${oldId}`)?.value            || '';
+        const divCust = document.getElementById(`editLeagueDivCustom_${oldId}`)?.value.trim()|| '';
+        const div     = divCust || divSel;
+        if (!newId) return showMessage("リーグIDは必須です", "error");
+        const missing = [];
+        if (!year)   missing.push('年度');
+        if (!season) missing.push('シーズン');
+        if (!cat)    missing.push('リーグカテゴリ');
+        if (!div)    missing.push('DIVカテゴリ');
+        if (missing.length > 0) showMessage(`⚠ 未入力: ${missing.join(' / ')}`, "warning");
+        const meta = { year, season, category: cat, div };
+        const name = window.buildLeagueLabel(meta);
+        if (newId !== oldId && leagueLabelMap[newId] !== undefined) return showMessage("変更後のIDは既に存在します", "error");
+        if (newId !== oldId) {
+            teamMaster.forEach(t => {
+                if (t.l1 === oldId) t.l1 = newId;
+                if (t.l2 && t.l2.includes(oldId)) t.l2 = t.l2.map(l => l === oldId ? newId : l);
+            });
+            leagueMeta[newId] = meta; delete leagueMeta[oldId];
+            leagueLabelMap[newId] = name; delete leagueLabelMap[oldId];
+        } else {
+            leagueMeta[oldId] = meta;
+            leagueLabelMap[oldId] = name;
+        }
+        await saveToCloud();
+        window.renderLeagueManagerList();
+        updateUIForLeagueChange();
+        showMessage("リーグ情報を更新しました", "success");
     },
     deleteLeague: async (id) => { 
         const inUse = teamMaster.some(t => t.l1 === id || (t.l2 && t.l2.includes(id))); 
@@ -9221,7 +9684,7 @@ window.smartStartSaveProcess = function() {
 </script>
 
 <!-- ═══════════════════════════════════════════════════════════════
-     大会ランキング機能 (v52.179 Phase 4.23 Tournament Ranking)
+     大会ランキング機能 (v52.181 Phase 4.25 Tournament Ranking)
      ─ openTournamentRanking(leagueId)
      ─ fetchAndSaveRanking(leagueId)
      ─ loadRankingHistory(leagueId)
