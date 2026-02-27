@@ -4158,7 +4158,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="flex items-center gap-3 mt-2">
                 <span class="text-gray-400 uppercase tracking-widest text-[10px]">INTEGRATED MANAGEMENT CONSOLE</span>
-                <span class="bg-emerald-600 text-white px-3 py-0.5 rounded-full text-[10px] tracking-widest uppercase">SYSTEM v52.181 Phase 4.25</span><span class="text-[9px] text-gray-300/40 tracking-wide ml-1 select-none">Produced by <a href="https://x.com/ryoryomaru99" target="_blank" rel="noopener" class="text-gray-300/40 hover:text-gray-400/60 transition-colors no-underline">@ryoryomaru99</a></span>
+                <span class="bg-emerald-600 text-white px-3 py-0.5 rounded-full text-[10px] tracking-widest uppercase">SYSTEM v52.182 Phase 4.26</span><span class="text-[9px] text-gray-300/40 tracking-wide ml-1 select-none">Produced by <a href="https://x.com/ryoryomaru99" target="_blank" rel="noopener" class="text-gray-300/40 hover:text-gray-400/60 transition-colors no-underline">@ryoryomaru99</a></span>
                 <span id="syncStatus" class="text-[10px] text-gray-400 uppercase tracking-widest flex items-center gap-1"></span>
             </div>
         </div>
@@ -5032,9 +5032,51 @@ function formatTime(ms) {
 }
 
 function parseGeminiJSON(text) {
+    // v52.182 BUG-2 Fix: 堅牢なJSON解析 (不正レスポンス対応)
     if (!text) return null;
-    const raw = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    return JSON.parse(raw);
+    let raw = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+
+    // 試行1: そのままパース
+    try { return JSON.parse(raw); } catch(e1) { /* continue */ }
+
+    // 試行2: 先頭の { ... } を抽出してパース
+    try {
+        const m = raw.match(/\{[\s\S]*\}/);
+        if (m) return JSON.parse(m[0]);
+    } catch(e2) { /* continue */ }
+
+    // 試行3: 末尾の切れた文字列を修復して再試行
+    try {
+        let repaired = raw;
+        // 未閉じ文字列を閉じる
+        repaired = repaired.replace(/([^\\])"([^"\n\r]*$)/m, '$1"$2"');
+        // 末尾の不完全なオブジェクト/配列を閉じる
+        const opens = (repaired.match(/\{/g)||[]).length - (repaired.match(/\}/g)||[]).length;
+        const aopens = (repaired.match(/\[/g)||[]).length - (repaired.match(/\]/g)||[]).length;
+        for(let i=0;i<aopens;i++) repaired += ']';
+        for(let i=0;i<opens;i++) repaired += '}';
+        // 末尾のカンマを除去
+        repaired = repaired.replace(/,([\s]*[\}\]])/g, '$1');
+        return JSON.parse(repaired);
+    } catch(e3) { /* continue */ }
+
+    // 試行4: latest/lifetime 配列だけを抽出して構築
+    try {
+        const latestMatch = raw.match(/"latest"\s*:\s*(\[[\s\S]*?\])/);
+        const lifetimeMatch = raw.match(/"lifetime"\s*:\s*(\[[\s\S]*?\])/);
+        const result = {};
+        if (latestMatch) {
+            try { result.latest = JSON.parse(latestMatch[1]); } catch(e) { result.latest = []; }
+        } else { result.latest = []; }
+        if (lifetimeMatch) {
+            try { result.lifetime = JSON.parse(lifetimeMatch[1]); } catch(e) { result.lifetime = []; }
+        } else { result.lifetime = []; }
+        if (result.latest.length > 0 || result.lifetime.length > 0) return result;
+    } catch(e4) { /* continue */ }
+
+    // すべて失敗 → null を返す (呼び出し元で !res チェック)
+    console.error('[parseGeminiJSON] すべての修復試行が失敗しました。生テキスト(先頭500文字):', text.substring(0,500));
+    return null;
 }
 
 const delay = (ms, signal) => new Promise((resolve, reject) => {
@@ -6730,10 +6772,21 @@ async function startBatchProcessing() { const key = window.getApiKey(); if (!key
         addStepLog(i, 'Step 4/6: Gemini API 解析完了・選手データ抽出成功', 'success');
         updateProgress('adminAuto', baseProgress + Math.floor(stepRatio * 0.9), `[${processed+1}/${totalItems}] 4/5: 抽出データの検証とキューへの登録中... (${timeInfo})`); 
         await delay(400, currentAbortController.signal); 
-        if (text) { 
-            const res = parseGeminiJSON(text); // Fix v50.60
+        if (text) {
+            const res = parseGeminiJSON(text); // v52.182: 堅牢化済み
             console.log(`[Batch ${i+1}] AI Response:`, res);
-            
+
+            // v52.182 BUG-2 Fix: res が null (解析失敗) の場合をスキップ
+            if (!res) {
+                console.error(`[Batch ${i+1}] ❌ JSON解析失敗 - スキップして次のチームへ`);
+                autoAnalysisQueue[i].status = 'error';
+                autoAnalysisQueue[i].step = '❌ JSON解析失敗';
+                addStepLog(i, 'JSON解析失敗: Gemini APIのレスポンスを解析できませんでした', 'error');
+                processed++;
+                renderAutoQueueCards();
+                continue;
+            }
+
             // Add _teamId to each player
             if(res.latest && Array.isArray(res.latest)) {
                 res.latest.forEach(r => r._teamId = autoAnalysisQueue[i].id);
@@ -7729,6 +7782,11 @@ Object.assign(window, {
     retryAdminQueueItem: (idx) => { if(isBatchProcessing) return; const item = autoAnalysisQueue[idx]; if(item && (item.status==='error'||item.status==='aborted')){ item.status='waiting'; item.step='⏸️ 待機中'; item.logs=[]; renderAutoQueueCards(); showMessage(`[${item.name}] を再解析キューに追加しました`, 'success'); } },
     retryErrors: () => { autoAnalysisQueue.forEach(x => { if(x.status==='error' || x.status==='aborted') x.status='waiting'; }); renderAutoQueueCards(); },
     startSaveProcess, executeFinalSave,
+    // v52.182 BUG-1 Fix: モジュールスコープ変数をグローバルに公開するアクセサ
+    getBatchPendingResults: () => batchPendingResults,
+    setBatchPendingResults: (v) => { batchPendingResults = v; },
+    getAutoAnalysisQueue: () => autoAnalysisQueue,
+    setAutoAnalysisQueue: (v) => { autoAnalysisQueue = v; },
     ignoreAllMergeConflicts: () => {
         // すべての競合を無視 - データ変更なし
         currentConflicts = [];
@@ -9358,84 +9416,25 @@ window.addApiKeyToPool = function() {
 // ─── Sprint 3: Parallel Batch Processing (P0) ────────────────────────
 const BATCH_CONCURRENCY = 3; // 1=直列(安全), 3=高速, 5=積極的
 
-async function startBatchProcessingParallel() {
-    const key = window.getApiKey();
-    if (!key) {
-        if (typeof showMessage === 'function') showMessage('APIキーがありません', 'error');
-        return;
-    }
-    const waitingItems = (typeof autoAnalysisQueue !== 'undefined' ? autoAnalysisQueue : []).filter(x => x.status === 'waiting');
-    const totalItems = waitingItems.length;
-    if (totalItems === 0) {
-        if (typeof showMessage === 'function') showMessage('解析キューにチームが追加されていません', 'error');
-        return;
-    }
+// v52.182 BUG-3 Fix: startBatchProcessingParallel
+// 旧実装は processTeamBatch (未定義) を呼ぶだけのゾンビコードだったため削除。
+// window.startBatchProcessing は Block C (module) の本物の startBatchProcessing を
+// Object.assign(window,...) 経由で参照しているのでここで上書きしない。
+// 「並列バッジ」表示は残す。
+(function() {
+    const origStart = window.startBatchProcessing;
+    if (typeof origStart !== 'function') return;
 
-    if (typeof isBatchProcessing !== 'undefined') window._isBatchProcessing = true;
-    if (typeof isStopRequested !== 'undefined') window._isStopRequested = false;
-    if (typeof currentAbortController !== 'undefined') window._abortController = new AbortController();
-    if (typeof renderAutoQueueCards === 'function') renderAutoQueueCards();
-    const batchStartTime = performance.now();
-    let processed = 0;
-
-    // Show parallel badge
-    const concLabel = document.getElementById('batchConcurrencyLabel');
-    if (concLabel) concLabel.textContent = `×${BATCH_CONCURRENCY}並列`;
-
-    const indices = (typeof autoAnalysisQueue !== 'undefined' ? autoAnalysisQueue : [])
-        .map((x, i) => x.status === 'waiting' ? i : -1)
-        .filter(i => i >= 0);
-
-    async function processItem(i) {
-        if (typeof autoAnalysisQueue === 'undefined') return;
-        if (!autoAnalysisQueue[i].logs) autoAnalysisQueue[i].logs = [];
-        if (window._isStopRequested) { autoAnalysisQueue[i].status = 'aborted'; return; }
-        autoAnalysisQueue[i].status = 'processing';
-        if (typeof renderAutoQueueCards === 'function') renderAutoQueueCards();
-
-        try {
-            // Existing single-item processing logic
-            if (typeof startBatchProcessing === 'function' && startBatchProcessing !== startBatchProcessingParallel) {
-                // Use original processTeamAnalysis if available
-            }
-            if (typeof processTeamBatch === 'function') {
-                await processTeamBatch(i);
-            } else {
-                // Fallback: mark as done
-                autoAnalysisQueue[i].status = 'done';
-            }
-        } catch(e) {
-            autoAnalysisQueue[i].status = 'error';
-            autoAnalysisQueue[i].logs.push(`エラー: ${e.message}`);
-        }
-
-        processed++;
-        const elapsed = (performance.now() - batchStartTime) / 1000;
-        const rate = processed / elapsed;
-        const remaining = (indices.length - processed) / rate;
-        window._batchTimeInfo = `経過: ${elapsed.toFixed(0)}s / 残り推定: ${remaining.toFixed(0)}s`;
-        if (typeof renderAutoQueueCards === 'function') renderAutoQueueCards();
-    }
-
-    // Semaphore: process in batches of BATCH_CONCURRENCY
-    for (let chunk = 0; chunk < indices.length; chunk += BATCH_CONCURRENCY) {
-        if (window._isStopRequested) break;
-        const batch = indices.slice(chunk, chunk + BATCH_CONCURRENCY);
-        await Promise.all(batch.map(i => processItem(i)));
-        await new Promise(r => setTimeout(r, 500)); // 500ms pause between chunks
-    }
-
-    window._isBatchProcessing = false;
-    if (concLabel) concLabel.textContent = `×${BATCH_CONCURRENCY}並列`;
-    if (typeof renderAutoQueueCards === 'function') renderAutoQueueCards();
-    const totalTime = ((performance.now() - batchStartTime) / 1000).toFixed(1);
-    if (typeof showMessage === 'function') showMessage(`並列バッチ完了: ${processed}チーム処理 (${totalTime}秒)`, 'success');
-}
-
-// Override startBatchProcessing with parallel version
-if (typeof startBatchProcessing !== 'undefined') {
-    window.startBatchProcessing = startBatchProcessingParallel;
-}
+    window.startBatchProcessing = async function startBatchProcessingParallel_v182() {
+        // 並列バッジ表示 (視覚的フィードバック)
+        const concLabel = document.getElementById('batchConcurrencyLabel');
+        if (concLabel) concLabel.textContent = '解析中...';
+        // Block C の本物の startBatchProcessing を呼ぶ
+        await origStart();
+        if (concLabel) concLabel.textContent = '完了';
+    };
+    console.log('[v52.182] ✅ startBatchProcessing ラッパー登録完了（ゾンビコード削除済み）');
+})();
 
 // ─── Sprint 3: Sparkline Chart ────────────────────────────────────────
 function renderSparkline(canvasId, data) {
@@ -9687,18 +9686,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
 });
 
-console.log('[v52.177] ✅ Sprint3 JS loaded (API Pool + Parallel Batch + Detail Panel + CSV + URL Hash)');
+console.log('[v52.182] ✅ Sprint3 JS loaded (API Pool + Batch + Detail Panel + CSV + URL Hash) [BUG-1,2,3 Fixed]');
 // ===== v52.178: smartStartSaveProcess (DB反映ボタン常時表示対応) =====
+// v52.182 BUG-1 Fix: smartStartSaveProcess
+// 旧実装は batchPendingResults (モジュールスコープ) を直接参照していたため ReferenceError
+// → window.getBatchPendingResults() / window.getAutoAnalysisQueue() 経由でアクセス
 window.smartStartSaveProcess = function() {
-    const hasPending = (
-        (batchPendingResults.latest && batchPendingResults.latest.length > 0) ||
-        (batchPendingResults.lifetime && batchPendingResults.lifetime.length > 0)
+    // モジュールスコープの変数にアクセサ経由でアクセス
+    const pending = (typeof window.getBatchPendingResults === 'function')
+        ? window.getBatchPendingResults()
+        : null;
+    const queue = (typeof window.getAutoAnalysisQueue === 'function')
+        ? window.getAutoAnalysisQueue()
+        : null;
+
+    const hasPending = pending && (
+        (pending.latest  && pending.latest.length  > 0) ||
+        (pending.lifetime && pending.lifetime.length > 0)
     );
-    const hasQueueDone = autoAnalysisQueue && autoAnalysisQueue.some(x => x.status === 'done');
-    
+    const hasQueueDone = queue && Array.isArray(queue) && queue.some(x => x.status === 'done');
+
     if (!hasPending && !hasQueueDone) {
         // 未解析時: 警告メッセージを表示
-        showMessage('⚠️ まだ解析データがありません。先に「解析を開始」してください。', 'error');
+        const showMsg = typeof showMessage === 'function' ? showMessage
+                      : typeof window.showMessage === 'function' ? window.showMessage
+                      : (m) => alert(m);
+        showMsg('⚠️ まだ解析データがありません。先に「解析を開始」してください。', 'error');
         // ボタンを一瞬揺らすアニメーション
         const btn = document.getElementById('batchApplyBtn');
         if (btn) {
@@ -9708,14 +9721,18 @@ window.smartStartSaveProcess = function() {
         return;
     }
     // 解析データあり → 通常の保存処理へ
-    window.startSaveProcess();
+    if (typeof window.startSaveProcess === 'function') {
+        window.startSaveProcess();
+    } else {
+        console.error('[v52.182] window.startSaveProcess が未定義です');
+    }
 };
 // ===== v52.178: smartStartSaveProcess 終了 =====
 
 </script>
 
 <!-- ═══════════════════════════════════════════════════════════════
-     大会ランキング機能 (v52.181 Phase 4.25 Tournament Ranking)
+     大会ランキング機能 (v52.182 Phase 4.26 Tournament Ranking)
      ─ openTournamentRanking(leagueId)
      ─ fetchAndSaveRanking(leagueId)
      ─ loadRankingHistory(leagueId)
